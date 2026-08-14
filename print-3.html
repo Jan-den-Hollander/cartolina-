@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2B2024">
+<title>Print-PDF · Briefkaart</title>
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#2B2024; --panel:#372A2E; --panel-2:#443338; --border:#5A444B;
+    --ink-ui:#F5EBE0; --muted:#C9AFA0; --accent-red:#D0405A; --accent-blue:#3E63B8;
+    --accent-gold:#D8A34E; --accent-teal:#4F9C8C; --focus:#E8B86A;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:linear-gradient(180deg,var(--bg),#241B1E 60%);color:var(--ink-ui);
+    font-family:'IBM Plex Mono',monospace;-webkit-tap-highlight-color:transparent;padding-bottom:56px;}
+  header{padding:18px 16px 8px;max-width:640px;margin:0 auto;}
+  a.back{color:var(--muted);text-decoration:none;font-size:.78rem;}
+  a.back:hover{color:var(--focus);}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-style:italic;font-size:1.4rem;margin:10px 0 4px;
+     background:linear-gradient(90deg,var(--focus),var(--accent-red));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .sub{color:var(--muted);font-size:.78rem;}
+  main{max-width:640px;margin:0 auto;padding:0 16px;}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin:14px 0;
+    border-left:3px solid var(--accent-blue);}
+  .panel h2{font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:1rem;margin:0 0 10px;}
+  .previews{display:flex;gap:10px;margin:10px 0;}
+  .previews figure{flex:1;margin:0;background:#1c1518;border:1px solid var(--border);border-radius:8px;
+    padding:6px;text-align:center;}
+  .previews img{width:100%;height:auto;border-radius:4px;display:block;}
+  .previews figcaption{font-size:.65rem;color:var(--muted);margin-top:4px;}
+  .modes{display:flex;flex-direction:column;gap:10px;margin:14px 0;}
+  .mode{background:var(--panel-2);border:2px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;}
+  .mode[aria-pressed="true"]{border-color:var(--focus);background:rgba(232,184,106,.1);}
+  .mode h3{margin:0 0 4px;font-family:'Fraunces',serif;font-style:italic;font-size:.92rem;font-weight:600;color:var(--ink-ui);}
+  .mode p{margin:0;font-size:.76rem;color:var(--muted);line-height:1.5;}
+  #pdfBtn{width:100%;background:linear-gradient(90deg,var(--accent-red),#B8324A);color:#fff;border:none;border-radius:10px;
+    padding:14px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:.9rem;letter-spacing:.4px;
+    margin-top:6px;cursor:pointer;box-shadow:0 6px 18px rgba(208,64,90,.35);}
+  #pdfBtn:active{transform:translateY(1px);}
+  #pdfMsg{font-size:.75rem;text-align:center;margin-top:10px;min-height:1em;color:var(--muted);}
+  .steps{font-size:.78rem;color:var(--muted);line-height:1.7;margin:0;padding-left:1.1em;}
+  .empty{text-align:center;padding:40px 20px;}
+  .empty p{color:var(--muted);font-size:.85rem;line-height:1.6;}
+  .empty a{color:var(--focus);}
+
+  #layoutPreview{margin:16px 0;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .sheet-row{display:flex;gap:14px;justify-content:center;width:100%;}
+  .sheet{position:relative;background:#1c1518;border:1.5px solid var(--border);border-radius:4px;overflow:hidden;}
+  .sheet .cap{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:.6rem;color:var(--muted);
+    background:rgba(0,0,0,.45);padding:2px 0;}
+  .sheet img{width:100%;height:100%;object-fit:contain;display:block;}
+  .sheet.a5{width:120px;aspect-ratio:210/148;}
+  .sheet.a4{width:100px;aspect-ratio:210/297;display:flex;flex-direction:column;}
+  .sheet.a4 .half{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .sheet.a4 .half.blank{background:repeating-linear-gradient(45deg,#1c1518,#1c1518 4px,#221a1d 4px,#221a1d 8px);}
+  .sheet.a4 .half.blank::after{content:"leeg";font-size:.52rem;color:var(--muted);}
+  .sheet.a4 .half img{width:92%;height:92%;object-fit:contain;}
+  .sheet.a4.cutfold{gap:0;}
+  .sheet.a4.cutfold .zone{flex:1;display:flex;flex-direction:column;position:relative;}
+  .sheet.a4.cutfold .zone.cutbelow{border-bottom:2px solid var(--accent-red);}
+  .sheet.a4.cutfold .half{border-bottom:2px dashed var(--accent-gold);}
+  .sheet.a4.cutfold .half:last-child{border-bottom:none;}
+  .sheet.a4.thirds .third{flex:1 1 0;position:relative;display:flex;align-items:center;justify-content:center;
+    overflow:hidden;border-bottom:2px dashed var(--accent-gold);}
+  .sheet.a4.thirds .third:last-child{border-bottom:none;}
+  .sheet.a4.thirds .third.blank{background:repeating-linear-gradient(45deg,#1c1518,#1c1518 4px,#221a1d 4px,#221a1d 8px);}
+  .sheet.a4.thirds .third.blank::after{content:"leeg middenvlak";font-size:.5rem;color:var(--muted);}
+  .sheet.a4.thirds .third img{width:90%;height:90%;object-fit:contain;}
+  .sheet.a4.thirds .fold-num{position:absolute;right:2px;top:2px;font-size:.5rem;color:var(--accent-gold);
+    background:rgba(0,0,0,.5);border-radius:50%;width:12px;height:12px;display:flex;align-items:center;justify-content:center;}
+  .fold-note{font-size:.68rem;color:var(--accent-gold);text-align:center;max-width:260px;line-height:1.5;}
+  .fold-note .arrow{font-size:1rem;display:block;}
+  .privacy-warn{font-size:.68rem;color:#F0B4B4;text-align:center;max-width:280px;line-height:1.5;
+    background:rgba(208,64,90,.12);border:1px solid var(--accent-red);border-radius:8px;padding:8px 10px;margin-top:4px;}
+  .stamp-reminder{font-size:.7rem;color:var(--ink-ui);text-align:center;max-width:280px;line-height:1.5;
+    background:rgba(232,184,106,.14);border:1px solid var(--accent-gold);border-radius:8px;padding:8px 10px;margin-top:4px;}
+
+  #copyFooter{position:fixed;bottom:0;left:0;right:0;background:rgba(36,26,30,.96);color:var(--muted);
+    font-size:.62rem;text-align:center;padding:7px 10px;z-index:9999;font-family:'IBM Plex Mono',monospace;
+    letter-spacing:.2px;user-select:none;border-top:1px solid rgba(232,184,106,.3);line-height:1.6;}
+  #copyFooter .hl{color:var(--focus);}
+  #copyFooter .lic{color:var(--muted);cursor:pointer;text-decoration:underline;}
+  #licenseModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10000;
+    align-items:center;justify-content:center;padding:20px;}
+  #licenseModal .box{background:var(--panel);color:var(--ink-ui);border:1px solid var(--focus);
+    border-radius:12px;max-width:440px;width:100%;padding:20px;font-family:'IBM Plex Mono',monospace;
+    font-size:.78rem;line-height:1.6;max-height:82vh;overflow-y:auto;}
+  #licenseModal h3{color:var(--focus);margin:0 0 10px;font-size:.95rem;font-family:'Fraunces',serif;font-style:italic;}
+  #licenseModal .modal-sub{font-weight:normal;font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-style:normal;}
+  #licenseModal p{margin:10px 0;}
+  #licenseModal a{color:var(--accent-teal);}
+  #licenseModal hr{border:none;border-top:1px solid var(--border);margin:14px 0;}
+  #licenseModal button{margin-top:10px;padding:9px 18px;background:var(--accent-red);color:#fff;border:none;
+    border-radius:8px;cursor:pointer;font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:.78rem;}
+  #blockOverlay{position:fixed;inset:0;background:#1a1315;color:#F5EBE0;display:none;
+    align-items:center;justify-content:center;text-align:center;padding:30px;font-family:'IBM Plex Mono',monospace;z-index:10001;}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="index.html">&larr; Terug naar Briefkaart</a>
+  <h1>Print-PDF</h1>
+  <div class="sub">Maak een print-klaar PDF-bestand van je briefkaart — het papierformaat zit al in het bestand, jij hoeft alleen nog "dubbelzijdig" aan te vinken bij het printen.</div>
+</header>
+
+<main id="mainArea">
+  <!-- gevuld door script: leeg-scherm of de print-opties -->
+</main>
+
+<div id="copyFooter">
+  &copy; <span id="year"></span> <span class="hl">Jan den Hollander</span> &nbsp;|&nbsp;
+  <span class="hl">Briefkaart &middot; Cartolina</span> &nbsp;|&nbsp;
+  Gratis &middot; niet-commercieel &middot; ongewijzigd &nbsp;|&nbsp;
+  <span class="lic" id="licenseOpenBtn">&#8505;&#65039; Licentie</span>
+</div>
+
+<div id="licenseModal">
+  <div class="box">
+    <h3>&copy; Jan den Hollander &nbsp;&middot;&nbsp; <span class="modal-sub">Briefkaart &middot; Cartolina</span></h3>
+    <p>Dit hulpmiddel is gratis en mag vrij worden gedeeld, uitsluitend ongewijzigd en voor niet-commerciële doeleinden, met bronvermelding van de oorspronkelijke auteur. Commercieel gebruik, wijziging, verkoop of integratie in betaalde producten is uitdrukkelijk verboden zonder schriftelijke toestemming. Hulp is en blijft gratis.</p>
+    <hr>
+    <p>&#128231; <a href="mailto:jandenhollander@duck.com">jandenhollander@duck.com</a></p>
+    <p>&#128279; <a href="https://github.com/Jan-den-Hollander" target="_blank" rel="noopener">github.com/Jan-den-Hollander</a></p>
+    <button type="button" id="licenseCloseBtn">Sluiten</button>
+  </div>
+</div>
+
+<div id="blockOverlay">
+  <div>
+    <p style="font-family:'Fraunces',serif;font-style:italic;font-size:1.1rem;">Deze app is aangepast en kan niet worden vertrouwd.</p>
+    <p style="font-size:.8rem;color:#C9AFA0;">Herlaad de originele pagina om verder te gaan.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const mainArea = document.getElementById("mainArea");
+  const front = localStorage.getItem("briefkaart_print_front");
+  const back = localStorage.getItem("briefkaart_print_back");
+  const frontBlank = localStorage.getItem("briefkaart_print_frontblank") || front; // terugval voor oudere sessies
+
+  if(!front || !back){
+    mainArea.innerHTML = `
+      <div class="empty">
+        <p>Er staat nog geen briefkaart klaar om te printen.</p>
+        <p>Ga terug naar Briefkaart, maak je kaart, en tik daar op <strong>"📄 Print-PDF maken"</strong>.</p>
+        <p><a href="index.html">&larr; Terug naar Briefkaart</a></p>
+      </div>`;
+  } else {
+    mainArea.innerHTML = `
+      <div class="panel">
+        <h2>Jouw briefkaart</h2>
+        <div class="previews">
+          <figure><img src="${front}" alt="Voorzijde"><figcaption>Voorzijde</figcaption></figure>
+          <figure><img src="${back}" alt="Achterzijde"><figcaption>Achterzijde</figcaption></figure>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Kies een print-vorm</h2>
+        <div class="modes" id="modes">
+          <div class="mode" data-mode="flat" aria-pressed="true">
+            <h3>Dubbelzijdig — 2× A5</h3>
+            <p>Voor- en achterzijde elk op een eigen A5-pagina, klaar om dubbelzijdig af te drukken en te bewaren of op te sturen als een echte kaart.</p>
+          </div>
+          <div class="mode" data-mode="tent" aria-pressed="false">
+            <h3>Twee tafelkaartjes — voor- én achterzijde</h3>
+            <p>Eén A4, in twee gelijke helften (1× knippen) — elk met een blanco kopje en een afbeelding. De ene helft toont de voorzijde, de andere het bericht. Vouw allebei apart tot een A6-formaat kaartje dat zelfstandig overeind staat.</p>
+          </div>
+          <div class="mode" data-mode="aerogram" aria-pressed="false">
+            <h3>Aerogram — zelfvouwende brief</h3>
+            <p>Eén A4 in drieën, klassieke stijl: geen envelop nodig. Buitenop komt een blanco adresvak te staan, klaar om met de hand in te vullen — de echte voorzijde en je bericht zitten dichtgevouwen veilig verstopt binnenin.</p>
+          </div>
+        </div>
+
+        <div id="layoutPreview"></div>
+
+        <button id="pdfBtn" type="button">PDF downloaden</button>
+        <div id="pdfMsg"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Wat moet je zelf nog instellen?</h2>
+        <ol class="steps" id="stepsList">
+          <li>Open de PDF en kies "Afdrukken".</li>
+          <li>Bij de vorm <strong>Dubbelzijdig</strong>: vink in het printvenster "Dubbelzijdig / Beide kanten" aan — dat is de enige stap die de PDF niet automatisch voor je kan regelen.</li>
+          <li>Het papierformaat (A5 of A4) staat al in de PDF — de meeste printers en fotoservices lezen dat vanzelf uit.</li>
+        </ol>
+      </div>
+    `;
+
+    let mode = "flat";
+    const layoutPreview = document.getElementById("layoutPreview");
+    const stepsList = document.getElementById("stepsList");
+
+    function renderPreview(){
+      if(mode === "flat"){
+        layoutPreview.innerHTML = `
+          <div class="sheet-row">
+            <div class="sheet a5"><img src="${front}" alt="Voorzijde"><span class="cap">Pagina 1 · A5</span></div>
+            <div class="sheet a5"><img src="${back}" alt="Achterzijde"><span class="cap">Pagina 2 · A5</span></div>
+          </div>
+          <div class="fold-note">Twee losse A5-pagina's — voorzijde en achterzijde, in deze volgorde in één PDF.</div>`;
+        stepsList.innerHTML = `
+          <li>Open de PDF en kies "Afdrukken".</li>
+          <li>Vink in het printvenster <strong>"Dubbelzijdig / Beide kanten"</strong> aan — dat is de enige stap die de PDF niet automatisch voor je kan regelen.</li>
+          <li>Het papierformaat A5 staat al in de PDF — de meeste printers en fotoservices lezen dat vanzelf uit.</li>`;
+      } else if(mode === "tent"){
+        layoutPreview.innerHTML = `
+          <div class="sheet-row">
+            <div class="sheet a4 cutfold">
+              <div class="zone cutbelow">
+                <div class="half blank"></div>
+                <div class="half"><img src="${front}" alt="Voorzijde"></div>
+              </div>
+              <div class="zone">
+                <div class="half blank"></div>
+                <div class="half"><img src="${back}" alt="Bericht"></div>
+              </div>
+            </div>
+          </div>
+          <div class="fold-note"><span style="color:var(--accent-red);">&#9986;&#65039;</span> Knip precies op de <strong>rode</strong> lijn in het midden — dat geeft twee losse A5-stroken. Vouw daarna elke strook apart op zijn eigen <strong>gele stippellijn</strong> naar achteren (vouwrug boven), zodat elk kaartje zelfstandig op tafel staat — één met de voorzijde, één met je bericht.</div>`;
+        stepsList.innerHTML = `
+          <li>Open de PDF en kies "Afdrukken" op A4, gewoon enkelzijdig.</li>
+          <li>Knip eerst op de <strong>rode lijn</strong> in het midden — je hebt nu twee losse A5-stroken.</li>
+          <li>Vouw elke strook apart op de <strong>gele stippellijn</strong>, het lege deel naar achteren — klaar: twee A6-tafelkaartjes, één met de voorzijde en één met je bericht.</li>`;
+      } else {
+        layoutPreview.innerHTML = `
+          <div class="sheet-row">
+            <div class="sheet a4 thirds">
+              <div class="third"><img src="${frontBlank}" alt="Blanco adresvak"><span class="fold-num">2</span></div>
+              <div class="third"><img src="${front}" alt="Echte voorzijde"></div>
+              <div class="third"><img src="${back}" alt="Bericht (achterzijde)"><span class="fold-num">1</span></div>
+            </div>
+          </div>
+          <div class="fold-note">Drie gelijke vlakken, elk met ruime marge — geen vouw loopt door een afbeelding. <strong>①</strong> vouw eerst het onderste derde (bericht) omhoog over het midden. <strong>②</strong> vouw dan het bovenste derde (blanco adresvak) naar beneden eroverheen. Buitenop staat straks alleen het lege adresvak — je echte voorzijde en bericht zitten veilig verstopt binnenin. <em>In de PDF wordt het bovenste vlak bewust ondersteboven geprint — door de dubbele vouw staat het na afloop weer gewoon rechtop.</em></div>
+          <div class="stamp-reminder">📮 Vergeet niet nog een postzegel te plakken en het adres in te vullen op het blanco vlak, voordat je 'm op de bus doet.</div>`;
+        stepsList.innerHTML = `
+          <li>Open de PDF en kies "Afdrukken" op A4, gewoon enkelzijdig.</li>
+          <li>Vouw eerst het <strong>onderste derde (①, bericht)</strong> omhoog over het middelste vlak.</li>
+          <li>Vouw daarna het <strong>bovenste derde (②, blanco adresvak)</strong> naar beneden over dat geheel — klaar, geen envelop nodig.</li>
+          <li>Schrijf het adres en plak een postzegel op het blanco vlak dat nu buitenop zit.</li>`;
+      }
+    }
+    renderPreview();
+
+    document.getElementById("modes").addEventListener("click", (e)=>{
+      const el = e.target.closest(".mode");
+      if(!el) return;
+      mode = el.dataset.mode;
+      document.querySelectorAll(".mode").forEach(m=>m.setAttribute("aria-pressed", m===el ? "true":"false"));
+      renderPreview();
+    });
+
+    function loadImg(src){
+      return new Promise((resolve, reject)=>{
+        const img = new Image();
+        img.onload = ()=>resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    // Bij een dubbele vouw (onderste vlak eerst omhoog, bovenste vlak daarna omlaag erover) draait het
+    // vlak dat uiteindelijk buitenop zichtbaar wordt twee keer 180° om een horizontale vouwlijn — per saldo
+    // dus ondersteboven. Door dat vlak zelf al ondersteboven te printen, staat het na het vouwen weer goed.
+    function rotate180(img){
+      const c = document.createElement("canvas");
+      c.width = img.width; c.height = img.height;
+      const cx = c.getContext("2d");
+      cx.translate(c.width, c.height);
+      cx.rotate(Math.PI);
+      cx.drawImage(img, 0, 0);
+      return c;
+    }
+
+    function placeContain(doc, img, boxX, boxY, boxW, boxH, marginMm){
+      const availW = boxW - marginMm*2;
+      const availH = boxH - marginMm*2;
+      const ratio = img.width / img.height;
+      let w = availW, h = availW/ratio;
+      if(h > availH){ h = availH; w = availH*ratio; }
+      const x = boxX + (boxW-w)/2;
+      const y = boxY + (boxH-h)/2;
+      doc.addImage(img, "PNG", x, y, w, h);
+    }
+
+    async function makeFlatPdf(){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit:"mm", format:"a5", orientation:"landscape" });
+      const frontImg = await loadImg(front);
+      const backImg = await loadImg(back);
+      placeContain(doc, frontImg, 0, 0, 210, 148, 6);
+      doc.addPage("a5", "landscape");
+      placeContain(doc, backImg, 0, 0, 210, 148, 6);
+      doc.save("briefkaart-A5-dubbelzijdig.pdf");
+    }
+
+    async function makeTentPdf(){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit:"mm", format:"a4", orientation:"portrait" });
+      const frontImg = await loadImg(front);
+      const backImg = await loadImg(back);
+      const half = 297/2;      // knip hier — 2 losse A5-stroken
+      const quarter = half/2;  // vouw hier binnen elke strook — A6-formaat na vouwen
+
+      // strook 1 (boven): blanco kopje + voorzijde
+      placeContain(doc, frontImg, 0, quarter, 210, quarter, 8);
+      // strook 2 (onder): blanco kopje + bericht
+      placeContain(doc, backImg, 0, half+quarter, 210, quarter, 8);
+
+      // knip-lijn (rood, doorlopend) in het midden
+      doc.setDrawColor(208,64,90);
+      doc.setLineDashPattern([], 0);
+      doc.line(6, half, 204, half);
+      doc.setFontSize(7);
+      doc.setTextColor(208,64,90);
+      doc.text("✂ knip hier — twee losse stroken", 105, half-2.5, {align:"center"});
+
+      // vouw-lijnen (geel/grijs, gestippeld) binnen elke strook
+      doc.setDrawColor(180,180,180);
+      doc.setLineDashPattern([2,2], 0);
+      doc.line(10, quarter, 200, quarter);
+      doc.line(10, half+quarter, 200, half+quarter);
+      doc.setFontSize(6.5);
+      doc.setTextColor(150,150,150);
+      doc.text("vouwlijn — vouw naar achteren, vouwrug boven", 105, quarter-2, {align:"center"});
+      doc.text("vouwlijn — vouw naar achteren, vouwrug boven", 105, half+quarter-2, {align:"center"});
+
+      doc.save("briefkaart-A4-tafelkaartjes.pdf");
+    }
+
+    async function makeAerogramPdf(){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit:"mm", format:"a4", orientation:"portrait" });
+      const frontBlankImg = await loadImg(frontBlank);
+      const frontImg = await loadImg(front);
+      const backImg = await loadImg(back);
+      const third = 297/3; // ≈ 99mm per vlak — elke afbeelding blijft ruim binnen zijn eigen derde
+      const frontBlankRotated = rotate180(frontBlankImg);
+
+      // bovenste derde: blanco adresvak — ondersteboven geprint, wordt de zichtbare buitenkant na het dubbel vouwen
+      placeContain(doc, frontBlankRotated, 0, 0, 210, third, 8);
+      // middelste derde: de échte voorzijde (bericht + eventueel adres) — komt verborgen binnenin te zitten
+      placeContain(doc, frontImg, 0, third, 210, third, 8);
+      // onderste derde: het bericht (achterzijde) — komt ook verborgen binnenin te zitten
+      placeContain(doc, backImg, 0, third*2, 210, third, 8);
+
+      doc.setDrawColor(180,180,180);
+      doc.setLineDashPattern([2,2], 0);
+      doc.line(10, third, 200, third);
+      doc.line(10, third*2, 200, third*2);
+
+      doc.setFontSize(7);
+      doc.setTextColor(150,150,150);
+      doc.text("② vouwlijn — dit vlak (blanco adresvak) als laatste naar beneden vouwen", 105, third-2.5, {align:"center"});
+      doc.text("① vouwlijn — dit vlak (bericht) eerst omhoog vouwen, over het midden", 105, third*2-2.5, {align:"center"});
+      doc.setFontSize(6);
+      doc.text("let op: het bovenste vlak staat hier bewust ondersteboven — na het vouwen komt het weer goed", 105, 8, {align:"center"});
+      doc.text("📮 niet vergeten: postzegel plakken en adres invullen op het blanco vlak", 105, 289, {align:"center"});
+
+      doc.save("briefkaart-A4-aerogram.pdf");
+    }
+
+    const pdfBtn = document.getElementById("pdfBtn");
+    const pdfMsg = document.getElementById("pdfMsg");
+    pdfBtn.addEventListener("click", async ()=>{
+      pdfMsg.style.color = "var(--muted)";
+      pdfMsg.textContent = "PDF wordt gemaakt…";
+      try{
+        if(mode === "flat") await makeFlatPdf();
+        else if(mode === "tent") await makeTentPdf();
+        else await makeAerogramPdf();
+        pdfMsg.textContent = "Klaar! De PDF staat in je downloads.";
+      } catch(err){
+        pdfMsg.style.color = "#D0405A";
+        pdfMsg.textContent = "Er ging iets mis bij het maken van de PDF. Probeer het nog eens.";
+      }
+    });
+  }
+
+  /* ---------- copyright integrity ---------- */
+  const overlay = document.getElementById("blockOverlay");
+  function blockApp(){
+    document.querySelectorAll("main, header, #copyFooter, #licenseModal").forEach(el=>el.style.display="none");
+    overlay.style.display = "flex";
+  }
+  const notice = document.getElementById("copyFooter");
+  if(notice){
+    const observer = new MutationObserver(()=>{
+      if(!document.body.contains(notice) || !notice.textContent.includes("Jan den Hollander") || !notice.textContent.includes("Cartolina")){
+        blockApp();
+      }
+    });
+    observer.observe(document.body, {childList:true, subtree:true, characterData:true});
+  } else {
+    blockApp();
+  }
+
+  /* ---------- licentie-modal ---------- */
+  const licenseModal = document.getElementById("licenseModal");
+  document.getElementById("licenseOpenBtn").addEventListener("click", ()=>{ licenseModal.style.display = "flex"; });
+  document.getElementById("licenseCloseBtn").addEventListener("click", ()=>{ licenseModal.style.display = "none"; });
+  licenseModal.addEventListener("click", (e)=>{ if(e.target === licenseModal) licenseModal.style.display = "none"; });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
