@@ -1,8 +1,8 @@
 // Briefkaart · Cartolina — service worker
 // Netwerk-eerst: bij een update op Vercel krijg je meteen de nieuwste versie.
 // Alleen als er geen internet is, valt de app terug op de laatst opgeslagen kopie (offline-gebruik).
-const CACHE = "briefkaart-v3";
-const SHELL = ["./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./stamp.jpg", "./print.html"];
+const CACHE = "briefkaart-v4";
+const SHELL = ["./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./stamp.jpg", "./print.html", "./verlanglijstje.html", "./stamp-wish.jpg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
