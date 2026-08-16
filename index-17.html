@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Naast Je</title>
+<meta name="description" content="Dagelijkse aandacht tegen eenzaamheid — als een briefkaart aan jezelf.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2B3A42">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#EDE6D6;
+    --paper-soft:#F5F0E6;
+    --ink:#2B3A42;
+    --ink-soft:#4A5A62;
+    --stamp:#B5533C;
+    --sage:#7C9473;
+    --mustard:#D9A441;
+    --line: rgba(43,58,66,0.14);
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family:'IBM Plex Mono', monospace;
+    min-height:100vh;
+  }
+  .app{
+    max-width:560px;
+    margin:0 auto;
+    background: var(--ink);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  header{
+    padding: 28px 20px 18px;
+    border-bottom: 1px solid rgba(237,230,214,0.14);
+    position:relative;
+  }
+  .brandrow{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-style:italic;
+    font-size:1.7rem;
+    margin:0;
+    letter-spacing:0.2px;
+    color: var(--paper);
+  }
+  .tagline{
+    font-size:0.78rem;
+    color: rgba(237,230,214,0.6);
+    margin-top:6px;
+    line-height:1.5;
+  }
+  .stamp-mark{
+    width:34px;height:34px;
+    border:2px dashed rgba(237,230,214,0.4);
+    border-radius:4px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1rem;
+    color: var(--mustard);
+    flex-shrink:0;
+    transform: rotate(-6deg);
+  }
+  select#langSel{
+    margin-top:14px;
+    background: rgba(237,230,214,0.08);
+    color: var(--paper);
+    border:1px solid rgba(237,230,214,0.25);
+    border-radius:8px;
+    padding:7px 10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.8rem;
+  }
+  nav{
+    display:flex;
+    border-bottom: 1px solid rgba(237,230,214,0.14);
+    overflow-x:auto;
+  }
+  nav button{
+    flex:1;
+    min-width:84px;
+    background:none;
+    border:none;
+    color: rgba(237,230,214,0.5);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.03em;
+    padding:13px 6px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    text-transform:uppercase;
+  }
+  nav button.active{
+    color: var(--mustard);
+    border-bottom-color: var(--mustard);
+  }
+  main{
+    flex:1;
+    padding:22px 20px 100px;
+  }
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .card{
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: var(--radius);
+    padding:20px;
+    margin-bottom:16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  }
+  .card h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.2rem;
+    margin:0 0 4px;
+  }
+  .card .meta{
+    font-size:0.72rem;
+    color: var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:12px;
+  }
+  .card p{
+    font-size:0.92rem;
+    line-height:1.6;
+    margin:0 0 10px;
+  }
+  .weather-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background: rgba(43,58,66,0.08);
+    border-radius:20px;
+    padding:5px 12px;
+    font-size:0.75rem;
+    margin-bottom:12px;
+  }
+
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;
+    font-size:0.78rem;
+    color: rgba(237,230,214,0.75);
+    margin-bottom:6px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+  .field input[type=text], .field input[type=number], .field input[type=date], .field select{
+    width:100%;
+    background: rgba(237,230,214,0.06);
+    border:1px solid rgba(237,230,214,0.22);
+    color: var(--paper);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.9rem;
+  }
+  .chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    border:1px solid rgba(237,230,214,0.3);
+    color: rgba(237,230,214,0.85);
+    background: rgba(237,230,214,0.05);
+    border-radius:20px;
+    padding:7px 14px;
+    font-size:0.8rem;
+    cursor:pointer;
+    user-select:none;
+  }
+  .chip.on{
+    background: var(--sage);
+    border-color: var(--sage);
+    color: var(--ink);
+    font-weight:600;
+  }
+  .toggle-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid rgba(237,230,214,0.1);
+  }
+  .toggle-row .txt{font-size:0.85rem; color: rgba(237,230,214,0.85); max-width:75%;}
+  .switch{
+    position:relative; width:42px; height:24px; flex-shrink:0;
+  }
+  .switch input{opacity:0;width:0;height:0;}
+  .slider{
+    position:absolute; inset:0; background: rgba(237,230,214,0.2);
+    border-radius:24px; cursor:pointer; transition:0.2s;
+  }
+  .slider:before{
+    content:""; position:absolute; width:18px;height:18px; left:3px; top:3px;
+    background: var(--paper); border-radius:50%; transition:0.2s;
+  }
+  .switch input:checked + .slider{background: var(--sage);}
+  .switch input:checked + .slider:before{transform: translateX(18px);}
+
+  .btn{
+    display:inline-block;
+    background: var(--stamp);
+    color: var(--paper-soft);
+    border:none;
+    border-radius:10px;
+    padding:12px 20px;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:0.85rem;
+    cursor:pointer;
+    text-align:center;
+  }
+  .btn.secondary{
+    background:none;
+    border:1px solid rgba(237,230,214,0.3);
+    color: var(--paper);
+  }
+  .btn.full{width:100%;}
+  .btn-row{display:flex; gap:10px; flex-wrap:wrap;}
+
+  .people-list .person{
+    background: rgba(43,58,66,0.06);
+    border-radius:10px;
+    padding:10px 12px;
+    margin-bottom:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:0.85rem;
+  }
+  .person .rm{color:var(--stamp); cursor:pointer; font-weight:600; padding:2px 8px;}
+
+  .privacy-note{
+    font-size:0.72rem;
+    color: rgba(237,230,214,0.5);
+    line-height:1.6;
+    padding:14px 16px;
+    border:1px dashed rgba(237,230,214,0.25);
+    border-radius:10px;
+    margin-top:6px;
+  }
+  .footer-link{
+    display:block;
+    text-align:center;
+    font-size:0.72rem;
+    color: rgba(237,230,214,0.4);
+    margin-top:24px;
+    padding-top:16px;
+    border-top:1px solid rgba(237,230,214,0.1);
+  }
+  .footer-link a{color: var(--mustard); text-decoration:none;}
+
+  /* postcard canvas preview */
+  #cardPreviewWrap{margin-top:14px;}
+  canvas{width:100%; border-radius:10px; display:block;}
+  textarea#cardMsg{
+    width:100%; min-height:70px; margin-top:10px;
+    background: rgba(237,230,214,0.06);
+    border:1px solid rgba(237,230,214,0.22);
+    color: var(--paper);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:0.95rem;
+    resize:vertical;
+  }
+
+  .empty{
+    text-align:center;
+    padding:40px 20px;
+    color: rgba(237,230,214,0.5);
+    font-size:0.85rem;
+  }
+
+  ::selection{background:var(--mustard); color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brandrow">
+      <div>
+        <h1 data-i18n="appTitle">Naast Je</h1>
+        <div class="tagline" data-i18n="tagline">Een kleine attentie, om de paar dagen — voor als het huis wat stil is.</div>
+      </div>
+      <div class="stamp-mark">♥</div>
+    </div>
+    <select id="langSel"></select>
+  </header>
+
+  <nav>
+    <button class="tab-btn active" data-view="vandaag" data-i18n="navToday">Vandaag</button>
+    <button class="tab-btn" data-view="intake" data-i18n="navProfile">Voorkeuren</button>
+    <button class="tab-btn" data-view="mensen" data-i18n="navPeople">Mensen</button>
+    <button class="tab-btn" data-view="delen" data-i18n="navShare">Delen</button>
+  </nav>
+
+  <main>
+    <!-- VANDAAG -->
+    <section class="view active" id="view-vandaag">
+      <div id="todayContent"></div>
+      <div class="privacy-note" data-i18n="crisisNote">
+        Voel je je vaak zwaar somber of erg alleen? Praten helpt. Bel of chat gratis en anoniem met MIND Korrelatie (0900-1450) of de Luisterlijn (0900-0767).
+      </div>
+    </section>
+
+    <!-- INTAKE / VOORKEUREN -->
+    <section class="view" id="view-intake">
+      <div class="card">
+        <h2 data-i18n="profileTitle">Jouw voorkeuren</h2>
+        <p class="meta" data-i18n="profileMeta">Alles blijft op dit toestel — pas gerust aan wanneer je wilt.</p>
+
+        <div class="field">
+          <label data-i18n="lblName">Aanspreekvorm</label>
+          <input type="text" id="p_name" placeholder="Jan">
+        </div>
+
+        <div class="field">
+          <label data-i18n="lblPlace">Plaats of postcode (voor weer)</label>
+          <input type="text" id="p_place" placeholder="Amsterdam">
+        </div>
+
+        <div class="field">
+          <label data-i18n="lblInterests">Interesses</label>
+          <div class="chips" id="chips_interests"></div>
+        </div>
+
+        <div class="field">
+          <label data-i18n="lblBudget">Budget voor uitjes</label>
+          <select id="p_budget">
+            <option value="krap" data-i18n="budgetLow">Krap — liever gratis / thuis</option>
+            <option value="gemiddeld" data-i18n="budgetMid">Gemiddeld</option>
+            <option value="ruim" data-i18n="budgetHigh">Ruim</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label data-i18n="lblSocial">Sociale voorkeur</label>
+          <select id="p_social">
+            <option value="thuis" data-i18n="socialHome">Liever thuis-suggesties</option>
+            <option value="mix" data-i18n="socialMix">Mix van thuis en onder de mensen</option>
+            <option value="buiten" data-i18n="socialOut">Het liefst onder de mensen</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <div class="txt" data-i18n="lblVolunteer">Interesse in vrijwilligerswerk (ook intergenerationeel — samen met jongeren)</div>
+          <label class="switch"><input type="checkbox" id="p_volunteer"><span class="slider"></span></label>
+        </div>
+
+        <div class="toggle-row">
+          <div class="txt" data-i18n="lblLanguage">Wil je een taal leren?</div>
+          <label class="switch"><input type="checkbox" id="p_language"><span class="slider"></span></label>
+        </div>
+        <div class="field" id="languageChoiceWrap" style="display:none;">
+          <label data-i18n="lblLanguageWhich">Welke taal trekt je aan?</label>
+          <input type="text" id="p_language_which" placeholder="Italiaans...">
+        </div>
+
+        <div class="toggle-row">
+          <div class="txt" data-i18n="lblSurprise">Af en toe een verrassingstip, iets buiten je comfortzone? (nooit verplicht)</div>
+          <label class="switch"><input type="checkbox" id="p_surprise"><span class="slider"></span></label>
+        </div>
+
+        <div class="field">
+          <label data-i18n="lblFrequency">Hoe vaak een briefkaartje?</label>
+          <select id="p_frequency">
+            <option value="2" data-i18n="freq2x">2x per week</option>
+            <option value="1" data-i18n="freq1x">1x per week</option>
+            <option value="daily" data-i18n="freqDaily">Elke dag</option>
+          </select>
+        </div>
+
+        <button class="btn full" id="saveProfile" data-i18n="btnSave">Opslaan</button>
+      </div>
+
+      <div class="privacy-note" data-i18n="privacyNote">
+        Alles wat je hier invult blijft alleen op dit toestel opgeslagen — er wordt niets naar een server gestuurd. Alleen de kaart die je zelf kiest te delen, verlaat je telefoon.
+      </div>
+    </section>
+
+    <!-- MENSEN -->
+    <section class="view" id="view-mensen">
+      <div class="card">
+        <h2 data-i18n="peopleTitle">Om aan te denken</h2>
+        <p class="meta" data-i18n="peopleMeta">Kleinkinderen, verjaardagen, belangrijke data — aandacht geven werkt twee kanten op.</p>
+
+        <div class="field">
+          <label data-i18n="lblPersonName">Naam</label>
+          <input type="text" id="person_name" placeholder="Emma">
+        </div>
+        <div class="field">
+          <label data-i18n="lblPersonRel">Relatie</label>
+          <input type="text" id="person_rel" placeholder="kleindochter">
+        </div>
+        <div class="field">
+          <label data-i18n="lblPersonDate">Verjaardag / belangrijke datum</label>
+          <input type="date" id="person_date">
+        </div>
+        <button class="btn secondary full" id="addPerson" data-i18n="btnAddPerson">Toevoegen</button>
+      </div>
+
+      <div class="people-list" id="peopleList"></div>
+    </section>
+
+    <!-- DELEN -->
+    <section class="view" id="view-delen">
+      <div class="card">
+        <h2 data-i18n="shareTitle">Maak een briefkaart</h2>
+        <p class="meta" data-i18n="shareMeta">Stuur de dagtip aan jezelf, of geef 'm door aan een lotgenoot.</p>
+
+        <div class="field">
+          <label data-i18n="lblCardMsg">Tekst op de kaart</label>
+          <textarea id="cardMsg"></textarea>
+        </div>
+
+        <div class="field">
+          <label data-i18n="lblCardPhoto">Foto (optioneel — ook een eerder ontvangen kaart mag)</label>
+          <input type="file" id="cardPhoto" accept="image/*">
+        </div>
+
+        <div id="cardPreviewWrap">
+          <canvas id="cardCanvas" width="1000" height="640"></canvas>
+        </div>
+
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn" id="renderCard" data-i18n="btnRender">Kaart maken</button>
+          <button class="btn secondary" id="shareCard" data-i18n="btnShare">Delen</button>
+          <button class="btn secondary" id="downloadCard" data-i18n="btnDownload">Bewaren</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-link">
+      <span data-i18n="ecosystemText">Meer van dit soort apps ontdek je op</span>
+      <a href="https://zaino-dashboard-3te6.vercel.app" target="_blank" rel="noopener">zaino-dashboard-3te6.vercel.app</a>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ============ I18N ============ */
+const LANGS = [
+  {code:'nl', label:'Nederlands', flag:'🇳🇱'},
+  {code:'en', label:'English', flag:'🇬🇧'},
+  {code:'it', label:'Italiano', flag:'🇮🇹'},
+  {code:'fr', label:'Français', flag:'🇫🇷'},
+  {code:'de', label:'Deutsch', flag:'🇩🇪'},
+  {code:'es', label:'Español', flag:'🇪🇸'},
+  {code:'uk', label:'Українська', flag:'🇺🇦'},
+  {code:'tr', label:'Türkçe', flag:'🇹🇷'},
+];
+
+const TR = {
+  nl:{
+    appTitle:"Naast Je", tagline:"Een kleine attentie, om de paar dagen — voor als het huis wat stil is.",
+    navToday:"Vandaag", navProfile:"Voorkeuren", navPeople:"Mensen", navShare:"Delen",
+    crisisNote:"Voel je je vaak zwaar somber of erg alleen? Praten helpt. Bel of chat gratis en anoniem met MIND Korrelatie (0900-1450) of de Luisterlijn (0900-0767).",
+    profileTitle:"Jouw voorkeuren", profileMeta:"Alles blijft op dit toestel — pas gerust aan wanneer je wilt.",
+    lblName:"Aanspreekvorm", lblPlace:"Plaats of postcode (voor weer)", lblInterests:"Interesses",
+    lblBudget:"Budget voor uitjes", budgetLow:"Krap — liever gratis / thuis", budgetMid:"Gemiddeld", budgetHigh:"Ruim",
+    lblSocial:"Sociale voorkeur", socialHome:"Liever thuis-suggesties", socialMix:"Mix van thuis en onder de mensen", socialOut:"Het liefst onder de mensen",
+    lblVolunteer:"Interesse in vrijwilligerswerk (ook intergenerationeel — samen met jongeren)",
+    lblLanguage:"Wil je een taal leren?", lblLanguageWhich:"Welke taal trekt je aan?",
+    lblSurprise:"Af en toe een verrassingstip, iets buiten je comfortzone? (nooit verplicht)",
+    lblFrequency:"Hoe vaak een briefkaartje?", freq2x:"2x per week", freq1x:"1x per week", freqDaily:"Elke dag",
+    btnSave:"Opslaan",
+    privacyNote:"Alles wat je hier invult blijft alleen op dit toestel opgeslagen — er wordt niets naar een server gestuurd. Alleen de kaart die je zelf kiest te delen, verlaat je telefoon.",
+    peopleTitle:"Om aan te denken", peopleMeta:"Kleinkinderen, verjaardagen, belangrijke data — aandacht geven werkt twee kanten op.",
+    lblPersonName:"Naam", lblPersonRel:"Relatie", lblPersonDate:"Verjaardag / belangrijke datum", btnAddPerson:"Toevoegen",
+    shareTitle:"Maak een briefkaart", shareMeta:"Stuur de dagtip aan jezelf, of geef 'm door aan een lotgenoot.",
+    lblCardMsg:"Tekst op de kaart", lblCardPhoto:"Foto (optioneel — ook een eerder ontvangen kaart mag)",
+    btnRender:"Kaart maken", btnShare:"Delen", btnDownload:"Bewaren",
+    ecosystemText:"Meer van dit soort apps ontdek je op",
+    emptyPeople:"Nog niemand toegevoegd.",
+    upcoming:"Binnenkort: verjaardag van", inDays:"over {n} dagen",
+    interests:["Koken","Lezen","Wandelen","Fietsen","Tuin & planten","Muziek","Vrijwilligerswerk","Kamerplanten"],
+    todayLabel:"Vandaag voor jou", weatherFallback:"weer onbekend",
+    signoff:"Fijne dag toegewenst,",
+  },
+  en:{
+    appTitle:"Beside You", tagline:"A small thought, every few days — for when the house feels quiet.",
+    navToday:"Today", navProfile:"Preferences", navPeople:"People", navShare:"Share",
+    crisisNote:"Feeling low or very alone often? Talking helps. Free, anonymous support is available from local helplines in your country.",
+    profileTitle:"Your preferences", profileMeta:"Everything stays on this device — change it whenever you like.",
+    lblName:"How should we call you", lblPlace:"City or postcode (for weather)", lblInterests:"Interests",
+    lblBudget:"Budget for outings", budgetLow:"Tight — prefer free / at home", budgetMid:"Average", budgetHigh:"Comfortable",
+    lblSocial:"Social preference", socialHome:"Prefer home suggestions", socialMix:"Mix of home and going out", socialOut:"Prefer going out",
+    lblVolunteer:"Interested in volunteering (including intergenerational — working with younger people)",
+    lblLanguage:"Want to learn a language?", lblLanguageWhich:"Which language interests you?",
+    lblSurprise:"An occasional surprise tip, outside your comfort zone? (never required)",
+    lblFrequency:"How often should a card arrive?", freq2x:"2x per week", freq1x:"1x per week", freqDaily:"Every day",
+    btnSave:"Save",
+    privacyNote:"Everything you enter here stays on this device only — nothing is sent to a server. Only the card you choose to share leaves your phone.",
+    peopleTitle:"People to remember", peopleMeta:"Grandchildren, birthdays, important dates — giving attention pays back.",
+    lblPersonName:"Name", lblPersonRel:"Relation", lblPersonDate:"Birthday / important date", btnAddPerson:"Add",
+    shareTitle:"Make a postcard", shareMeta:"Send today's tip to yourself, or pass it on to a fellow traveller.",
+    lblCardMsg:"Text on the card", lblCardPhoto:"Photo (optional — a previously received card is fine too)",
+    btnRender:"Build card", btnShare:"Share", btnDownload:"Save",
+    ecosystemText:"Discover more apps like this at",
+    emptyPeople:"No one added yet.",
+    upcoming:"Coming up: birthday of", inDays:"in {n} days",
+    interests:["Cooking","Reading","Walking","Cycling","Garden & plants","Music","Volunteering","Houseplants"],
+    todayLabel:"Today, for you", weatherFallback:"weather unknown",
+    signoff:"Wishing you a good day,",
+  },
+  it:{
+    appTitle:"Accanto a Te", tagline:"Un piccolo pensiero, ogni pochi giorni — per quando la casa sembra silenziosa.",
+    navToday:"Oggi", navProfile:"Preferenze", navPeople:"Persone", navShare:"Condividi",
+    crisisNote:"Ti senti spesso giù o molto solo/a? Parlarne aiuta. Contatta un servizio di ascolto gratuito e anonimo nella tua zona.",
+    profileTitle:"Le tue preferenze", profileMeta:"Tutto resta su questo dispositivo — modifica quando vuoi.",
+    lblName:"Come vuoi essere chiamato/a", lblPlace:"Città o CAP (per il meteo)", lblInterests:"Interessi",
+    lblBudget:"Budget per le uscite", budgetLow:"Limitato — meglio gratis / a casa", budgetMid:"Medio", budgetHigh:"Ampio",
+    lblSocial:"Preferenza sociale", socialHome:"Preferisco suggerimenti da casa", socialMix:"Un mix di casa e uscite", socialOut:"Preferisco uscire",
+    lblVolunteer:"Interesse per il volontariato (anche intergenerazionale — con i più giovani)",
+    lblLanguage:"Vuoi imparare una lingua?", lblLanguageWhich:"Quale lingua ti attira?",
+    lblSurprise:"Ogni tanto un suggerimento a sorpresa, fuori dalla tua zona di comfort? (mai obbligatorio)",
+    lblFrequency:"Ogni quanto una cartolina?", freq2x:"2 volte a settimana", freq1x:"1 volta a settimana", freqDaily:"Ogni giorno",
+    btnSave:"Salva",
+    privacyNote:"Tutto ciò che inserisci qui resta solo su questo dispositivo — niente viene inviato a un server. Solo la cartolina che scegli di condividere lascia il telefono.",
+    peopleTitle:"Persone a cui pensare", peopleMeta:"Nipoti, compleanni, date importanti — dare attenzione ripaga.",
+    lblPersonName:"Nome", lblPersonRel:"Relazione", lblPersonDate:"Compleanno / data importante", btnAddPerson:"Aggiungi",
+    shareTitle:"Crea una cartolina", shareMeta:"Invia il suggerimento di oggi a te stesso, o passalo a un compagno di viaggio.",
+    lblCardMsg:"Testo sulla cartolina", lblCardPhoto:"Foto (opzionale — va bene anche una cartolina ricevuta prima)",
+    btnRender:"Crea cartolina", btnShare:"Condividi", btnDownload:"Salva",
+    ecosystemText:"Scopri altre app come questa su",
+    emptyPeople:"Nessuno aggiunto ancora.",
+    upcoming:"In arrivo: compleanno di", inDays:"tra {n} giorni",
+    interests:["Cucina","Lettura","Camminare","Bicicletta","Giardino & piante","Musica","Volontariato","Piante d'appartamento"],
+    todayLabel:"Oggi per te", weatherFallback:"meteo sconosciuto",
+    signoff:"Buona giornata,",
+  },
+  fr:{
+    appTitle:"À Tes Côtés", tagline:"Une petite attention, tous les quelques jours — pour quand la maison semble silencieuse.",
+    navToday:"Aujourd'hui", navProfile:"Préférences", navPeople:"Personnes", navShare:"Partager",
+    crisisNote:"Vous vous sentez souvent triste ou très seul(e) ? En parler aide. Des lignes d'écoute gratuites et anonymes existent près de chez vous.",
+    profileTitle:"Vos préférences", profileMeta:"Tout reste sur cet appareil — modifiez quand vous voulez.",
+    lblName:"Comment vous appeler", lblPlace:"Ville ou code postal (pour la météo)", lblInterests:"Intérêts",
+    lblBudget:"Budget pour les sorties", budgetLow:"Serré — préfère gratuit / à la maison", budgetMid:"Moyen", budgetHigh:"Confortable",
+    lblSocial:"Préférence sociale", socialHome:"Préfère les suggestions à la maison", socialMix:"Un mélange des deux", socialOut:"Préfère sortir",
+    lblVolunteer:"Intéressé(e) par le bénévolat (aussi intergénérationnel — avec des plus jeunes)",
+    lblLanguage:"Envie d'apprendre une langue ?", lblLanguageWhich:"Quelle langue vous attire ?",
+    lblSurprise:"De temps en temps une idée surprise, hors de votre zone de confort ? (jamais obligatoire)",
+    lblFrequency:"À quelle fréquence une carte ?", freq2x:"2x par semaine", freq1x:"1x par semaine", freqDaily:"Chaque jour",
+    btnSave:"Enregistrer",
+    privacyNote:"Tout ce que vous saisissez ici reste uniquement sur cet appareil — rien n'est envoyé à un serveur. Seule la carte que vous choisissez de partager quitte votre téléphone.",
+    peopleTitle:"Personnes à ne pas oublier", peopleMeta:"Petits-enfants, anniversaires, dates importantes — donner de l'attention le rend au double.",
+    lblPersonName:"Nom", lblPersonRel:"Relation", lblPersonDate:"Anniversaire / date importante", btnAddPerson:"Ajouter",
+    shareTitle:"Créer une carte postale", shareMeta:"Envoyez le conseil du jour à vous-même, ou partagez-le avec un compagnon.",
+    lblCardMsg:"Texte sur la carte", lblCardPhoto:"Photo (facultatif — une carte reçue avant convient aussi)",
+    btnRender:"Créer la carte", btnShare:"Partager", btnDownload:"Enregistrer",
+    ecosystemText:"Découvrez d'autres applications comme celle-ci sur",
+    emptyPeople:"Personne ajouté pour l'instant.",
+    upcoming:"À venir : anniversaire de", inDays:"dans {n} jours",
+    interests:["Cuisine","Lecture","Marche","Vélo","Jardin & plantes","Musique","Bénévolat","Plantes d'intérieur"],
+    todayLabel:"Aujourd'hui pour vous", weatherFallback:"météo inconnue",
+    signoff:"Bonne journée à vous,",
+  },
+  de:{
+    appTitle:"An Deiner Seite", tagline:"Eine kleine Aufmerksamkeit, alle paar Tage — für wenn es zu Hause still wird.",
+    navToday:"Heute", navProfile:"Einstellungen", navPeople:"Menschen", navShare:"Teilen",
+    crisisNote:"Fühlst du dich oft niedergeschlagen oder sehr allein? Reden hilft. Kostenlose, anonyme Beratung gibt es bei örtlichen Hilfetelefonen.",
+    profileTitle:"Deine Einstellungen", profileMeta:"Alles bleibt auf diesem Gerät — jederzeit änderbar.",
+    lblName:"Wie sollen wir dich nennen", lblPlace:"Ort oder Postleitzahl (für das Wetter)", lblInterests:"Interessen",
+    lblBudget:"Budget für Ausflüge", budgetLow:"Knapp — lieber kostenlos / zu Hause", budgetMid:"Mittel", budgetHigh:"Großzügig",
+    lblSocial:"Soziale Vorliebe", socialHome:"Lieber Vorschläge für zu Hause", socialMix:"Mischung aus beidem", socialOut:"Lieber unter Leute",
+    lblVolunteer:"Interesse an Ehrenamt (auch generationsübergreifend — mit jüngeren Menschen)",
+    lblLanguage:"Möchtest du eine Sprache lernen?", lblLanguageWhich:"Welche Sprache reizt dich?",
+    lblSurprise:"Ab und zu ein Überraschungstipp, außerhalb deiner Komfortzone? (nie verpflichtend)",
+    lblFrequency:"Wie oft eine Karte?", freq2x:"2x pro Woche", freq1x:"1x pro Woche", freqDaily:"Jeden Tag",
+    btnSave:"Speichern",
+    privacyNote:"Alles, was du hier einträgst, bleibt nur auf diesem Gerät — nichts wird an einen Server gesendet. Nur die Karte, die du selbst teilst, verlässt dein Telefon.",
+    peopleTitle:"Menschen, an die du denkst", peopleMeta:"Enkelkinder, Geburtstage, wichtige Daten — Aufmerksamkeit schenken zahlt sich aus.",
+    lblPersonName:"Name", lblPersonRel:"Beziehung", lblPersonDate:"Geburtstag / wichtiges Datum", btnAddPerson:"Hinzufügen",
+    shareTitle:"Postkarte erstellen", shareMeta:"Schick den Tagestipp an dich selbst oder gib ihn an einen Mitstreiter weiter.",
+    lblCardMsg:"Text auf der Karte", lblCardPhoto:"Foto (optional — auch eine früher erhaltene Karte ist ok)",
+    btnRender:"Karte erstellen", btnShare:"Teilen", btnDownload:"Speichern",
+    ecosystemText:"Weitere Apps wie diese findest du auf",
+    emptyPeople:"Noch niemand hinzugefügt.",
+    upcoming:"Demnächst: Geburtstag von", inDays:"in {n} Tagen",
+    interests:["Kochen","Lesen","Spazieren","Radfahren","Garten & Pflanzen","Musik","Ehrenamt","Zimmerpflanzen"],
+    todayLabel:"Heute für dich", weatherFallback:"Wetter unbekannt",
+    signoff:"Einen schönen Tag,",
+  },
+  es:{
+    appTitle:"A Tu Lado", tagline:"Un pequeño gesto, cada pocos días — para cuando la casa se siente silenciosa.",
+    navToday:"Hoy", navProfile:"Preferencias", navPeople:"Personas", navShare:"Compartir",
+    crisisNote:"¿Te sientes a menudo triste o muy solo/a? Hablarlo ayuda. Hay líneas de escucha gratuitas y anónimas cerca de ti.",
+    profileTitle:"Tus preferencias", profileMeta:"Todo se queda en este dispositivo — cámbialo cuando quieras.",
+    lblName:"Cómo te llamamos", lblPlace:"Ciudad o código postal (para el clima)", lblInterests:"Intereses",
+    lblBudget:"Presupuesto para salidas", budgetLow:"Ajustado — prefiero gratis / en casa", budgetMid:"Medio", budgetHigh:"Amplio",
+    lblSocial:"Preferencia social", socialHome:"Prefiero sugerencias en casa", socialMix:"Una mezcla de ambos", socialOut:"Prefiero salir",
+    lblVolunteer:"Interés en voluntariado (también intergeneracional — con personas más jóvenes)",
+    lblLanguage:"¿Quieres aprender un idioma?", lblLanguageWhich:"¿Qué idioma te atrae?",
+    lblSurprise:"¿De vez en cuando un consejo sorpresa, fuera de tu zona de confort? (nunca obligatorio)",
+    lblFrequency:"¿Con qué frecuencia una tarjeta?", freq2x:"2x por semana", freq1x:"1x por semana", freqDaily:"Cada día",
+    btnSave:"Guardar",
+    privacyNote:"Todo lo que introduces aquí queda solo en este dispositivo — nada se envía a un servidor. Solo la tarjeta que decides compartir sale de tu teléfono.",
+    peopleTitle:"Personas para recordar", peopleMeta:"Nietos, cumpleaños, fechas importantes — dar atención se devuelve.",
+    lblPersonName:"Nombre", lblPersonRel:"Relación", lblPersonDate:"Cumpleaños / fecha importante", btnAddPerson:"Añadir",
+    shareTitle:"Crear una postal", shareMeta:"Envía el consejo de hoy a ti mismo, o compártelo con alguien más.",
+    lblCardMsg:"Texto en la tarjeta", lblCardPhoto:"Foto (opcional — también vale una tarjeta recibida antes)",
+    btnRender:"Crear tarjeta", btnShare:"Compartir", btnDownload:"Guardar",
+    ecosystemText:"Descubre más apps como esta en",
+    emptyPeople:"Nadie añadido todavía.",
+    upcoming:"Próximamente: cumpleaños de", inDays:"en {n} días",
+    interests:["Cocina","Lectura","Caminar","Bicicleta","Jardín y plantas","Música","Voluntariado","Plantas de interior"],
+    todayLabel:"Hoy para ti", weatherFallback:"clima desconocido",
+    signoff:"Que tengas un buen día,",
+  },
+  uk:{
+    appTitle:"Поруч З Тобою", tagline:"Маленька турбота, раз на кілька днів — коли в домі надто тихо.",
+    navToday:"Сьогодні", navProfile:"Налаштування", navPeople:"Люди", navShare:"Поділитися",
+    crisisNote:"Часто сумно або дуже самотньо? Розмова допомагає. Безкоштовні анонімні лінії підтримки є у вашому регіоні.",
+    profileTitle:"Ваші налаштування", profileMeta:"Все залишається на цьому пристрої — змінюйте, коли забажаєте.",
+    lblName:"Як вас називати", lblPlace:"Місто або поштовий індекс (для погоди)", lblInterests:"Інтереси",
+    lblBudget:"Бюджет на вилазки", budgetLow:"Обмежений — краще безкоштовно / вдома", budgetMid:"Середній", budgetHigh:"Достатній",
+    lblSocial:"Соціальна перевага", socialHome:"Радше поради для дому", socialMix:"Поєднання обох", socialOut:"Радше серед людей",
+    lblVolunteer:"Цікавить волонтерство (зокрема міжпоколіннєве — з молоддю)",
+    lblLanguage:"Хочете вивчати мову?", lblLanguageWhich:"Яка мова вас приваблює?",
+    lblSurprise:"Час від часу порада-сюрприз, поза зоною комфорту? (ніколи не обов'язково)",
+    lblFrequency:"Як часто листівка?", freq2x:"2 рази на тиждень", freq1x:"1 раз на тиждень", freqDaily:"Щодня",
+    btnSave:"Зберегти",
+    privacyNote:"Все, що ви вводите тут, залишається лише на цьому пристрої — нічого не надсилається на сервер. Лише листівка, яку ви обираєте поділитися, залишає телефон.",
+    peopleTitle:"Люди, про яких пам'ятати", peopleMeta:"Онуки, дні народження, важливі дати — увага повертається.",
+    lblPersonName:"Ім'я", lblPersonRel:"Стосунок", lblPersonDate:"День народження / важлива дата", btnAddPerson:"Додати",
+    shareTitle:"Створити листівку", shareMeta:"Надішліть сьогоднішню пораду собі, або поділіться з іншим.",
+    lblCardMsg:"Текст на листівці", lblCardPhoto:"Фото (необов'язково — підійде й раніше отримана листівка)",
+    btnRender:"Створити листівку", btnShare:"Поділитися", btnDownload:"Зберегти",
+    ecosystemText:"Більше таких застосунків на",
+    emptyPeople:"Ще нікого не додано.",
+    upcoming:"Незабаром: день народження", inDays:"через {n} днів",
+    interests:["Кулінарія","Читання","Прогулянки","Велосипед","Сад і рослини","Музика","Волонтерство","Кімнатні рослини"],
+    todayLabel:"Сьогодні для вас", weatherFallback:"погода невідома",
+    signoff:"Гарного дня,",
+  },
+  tr:{
+    appTitle:"Yanı Başında", tagline:"Birkaç günde bir küçük bir düşünce — ev sessizleştiğinde.",
+    navToday:"Bugün", navProfile:"Tercihler", navPeople:"Kişiler", navShare:"Paylaş",
+    crisisNote:"Sık sık üzgün ya da çok yalnız mı hissediyorsun? Konuşmak yardımcı olur. Bölgenizde ücretsiz, anonim destek hatları bulunmaktadır.",
+    profileTitle:"Tercihlerin", profileMeta:"Her şey bu cihazda kalır — istediğinde değiştirebilirsin.",
+    lblName:"Sana nasıl seslenelim", lblPlace:"Şehir veya posta kodu (hava durumu için)", lblInterests:"İlgi alanları",
+    lblBudget:"Dışarı çıkma bütçesi", budgetLow:"Dar — ücretsiz / evde tercih ederim", budgetMid:"Orta", budgetHigh:"Rahat",
+    lblSocial:"Sosyal tercih", socialHome:"Ev önerilerini tercih ederim", socialMix:"İkisinin karışımı", socialOut:"Dışarı çıkmayı tercih ederim",
+    lblVolunteer:"Gönüllülüğe ilgi (nesiller arası — gençlerle birlikte dahil)",
+    lblLanguage:"Bir dil öğrenmek ister misin?", lblLanguageWhich:"Hangi dil ilgini çekiyor?",
+    lblSurprise:"Arada bir konfor alanının dışında bir sürpriz öneri? (asla zorunlu değil)",
+    lblFrequency:"Kart ne sıklıkla gelsin?", freq2x:"Haftada 2x", freq1x:"Haftada 1x", freqDaily:"Her gün",
+    btnSave:"Kaydet",
+    privacyNote:"Buraya girdiğin her şey yalnızca bu cihazda kalır — hiçbir şey sunucuya gönderilmez. Yalnızca paylaşmayı seçtiğin kart telefonundan çıkar.",
+    peopleTitle:"Hatırlanacak kişiler", peopleMeta:"Torunlar, doğum günleri, önemli tarihler — ilgi göstermek geri döner.",
+    lblPersonName:"İsim", lblPersonRel:"Yakınlık", lblPersonDate:"Doğum günü / önemli tarih", btnAddPerson:"Ekle",
+    shareTitle:"Kartpostal oluştur", shareMeta:"Bugünün önerisini kendine gönder, ya da bir dosta ilet.",
+    lblCardMsg:"Kart üzerindeki metin", lblCardPhoto:"Fotoğraf (isteğe bağlı — daha önce alınan bir kart da olur)",
+    btnRender:"Kart oluştur", btnShare:"Paylaş", btnDownload:"Kaydet",
+    ecosystemText:"Bunun gibi diğer uygulamaları şurada keşfet:",
+    emptyPeople:"Henüz kimse eklenmedi.",
+    upcoming:"Yaklaşan: doğum günü", inDays:"{n} gün sonra",
+    interests:["Yemek","Okuma","Yürüyüş","Bisiklet","Bahçe ve bitkiler","Müzik","Gönüllülük","İç mekan bitkileri"],
+    todayLabel:"Bugün senin için", weatherFallback:"hava durumu bilinmiyor",
+    signoff:"İyi günler,",
+  },
+};
+
+let currentLang = localStorage.getItem('naastje_lang') || 'nl';
+
+function t(key){
+  return (TR[currentLang] && TR[currentLang][key]) || TR.nl[key] || key;
+}
+
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    el.textContent = t(key);
+  });
+  document.documentElement.lang = currentLang;
+  renderInterestChips();
+  renderToday();
+  renderPeople();
+}
+
+function buildLangSelector(){
+  const sel = document.getElementById('langSel');
+  sel.innerHTML = LANGS.map(l=>`<option value="${l.code}">${l.flag} ${l.label}</option>`).join('');
+  sel.value = currentLang;
+  sel.addEventListener('change', ()=>{
+    currentLang = sel.value;
+    localStorage.setItem('naastje_lang', currentLang);
+    applyI18n();
+  });
+}
+
+/* ============ NAV ============ */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-'+btn.dataset.view).classList.add('active');
+  });
+});
+
+/* ============ PROFILE STORAGE ============ */
+const STORAGE_KEY = 'naastje_profile';
+const PEOPLE_KEY = 'naastje_people';
+
+function loadProfile(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveProfile(p){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+}
+function loadPeople(){
+  try{ return JSON.parse(localStorage.getItem(PEOPLE_KEY)) || []; }catch(e){ return []; }
+}
+function savePeople(list){
+  localStorage.setItem(PEOPLE_KEY, JSON.stringify(list));
+}
+
+function renderInterestChips(){
+  const wrap = document.getElementById('chips_interests');
+  const profile = loadProfile();
+  const chosen = profile.interests || [];
+  const list = t('interests');
+  wrap.innerHTML = list.map((label, idx)=>{
+    const on = chosen.includes(idx);
+    return `<div class="chip ${on?'on':''}" data-idx="${idx}">${label}</div>`;
+  }).join('');
+  wrap.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      chip.classList.toggle('on');
+    });
+  });
+}
+
+function fillProfileForm(){
+  const p = loadProfile();
+  document.getElementById('p_name').value = p.name || '';
+  document.getElementById('p_place').value = p.place || '';
+  document.getElementById('p_budget').value = p.budget || 'gemiddeld';
+  document.getElementById('p_social').value = p.social || 'mix';
+  document.getElementById('p_volunteer').checked = !!p.volunteer;
+  document.getElementById('p_language').checked = !!p.language;
+  document.getElementById('p_language_which').value = p.languageWhich || '';
+  document.getElementById('languageChoiceWrap').style.display = p.language ? 'block':'none';
+  document.getElementById('p_surprise').checked = !!p.surprise;
+  document.getElementById('p_frequency').value = p.frequency || '2';
+}
+
+document.getElementById('p_language').addEventListener('change', (e)=>{
+  document.getElementById('languageChoiceWrap').style.display = e.target.checked ? 'block':'none';
+});
+
+document.getElementById('saveProfile').addEventListener('click', ()=>{
+  const chosenIdx = Array.from(document.querySelectorAll('#chips_interests .chip.on')).map(c=>parseInt(c.dataset.idx));
+  const p = {
+    name: document.getElementById('p_name').value.trim(),
+    place: document.getElementById('p_place').value.trim(),
+    interests: chosenIdx,
+    budget: document.getElementById('p_budget').value,
+    social: document.getElementById('p_social').value,
+    volunteer: document.getElementById('p_volunteer').checked,
+    language: document.getElementById('p_language').checked,
+    languageWhich: document.getElementById('p_language_which').value.trim(),
+    surprise: document.getElementById('p_surprise').checked,
+    frequency: document.getElementById('p_frequency').value,
+  };
+  saveProfile(p);
+  document.querySelectorAll('.tab-btn')[0].click();
+  renderToday();
+});
+
+/* ============ PEOPLE ============ */
+document.getElementById('addPerson').addEventListener('click', ()=>{
+  const name = document.getElementById('person_name').value.trim();
+  const rel = document.getElementById('person_rel').value.trim();
+  const date = document.getElementById('person_date').value;
+  if(!name || !date) return;
+  const list = loadPeople();
+  list.push({name, rel, date, id: Date.now()});
+  savePeople(list);
+  document.getElementById('person_name').value='';
+  document.getElementById('person_rel').value='';
+  document.getElementById('person_date').value='';
+  renderPeople();
+  renderToday();
+});
+
+function renderPeople(){
+  const list = loadPeople();
+  const wrap = document.getElementById('peopleList');
+  if(list.length===0){
+    wrap.innerHTML = `<div class="empty">${t('emptyPeople')}</div>`;
+    return;
+  }
+  wrap.innerHTML = list.map(p=>{
+    return `<div class="person">
+      <span>${p.name}${p.rel? ' · '+p.rel:''} — ${p.date}</span>
+      <span class="rm" data-id="${p.id}">✕</span>
+    </div>`;
+  }).join('');
+  wrap.querySelectorAll('.rm').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const id = parseInt(el.dataset.id);
+      const newList = loadPeople().filter(p=>p.id!==id);
+      savePeople(newList);
+      renderPeople();
+      renderToday();
+    });
+  });
+}
+
+function daysUntilNextAnniversary(dateStr){
+  const now = new Date();
+  const d = new Date(dateStr);
+  const next = new Date(now.getFullYear(), d.getMonth(), d.getDate());
+  if(next < now) next.setFullYear(now.getFullYear()+1);
+  return Math.ceil((next - now) / (1000*60*60*24));
+}
+
+/* ============ WEATHER (Open-Meteo, no key) ============ */
+let weatherCache = null;
+async function getWeather(place){
+  if(!place) return null;
+  try{
+    const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(place)}&count=1`).then(r=>r.json());
+    if(!geo.results || !geo.results.length) return null;
+    const {latitude, longitude} = geo.results[0];
+    const w = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,precipitation,weather_code&timezone=auto`).then(r=>r.json());
+    return w.current;
+  }catch(e){
+    return null;
+  }
+}
+
+function isDecentWeather(current){
+  if(!current) return null; // unknown
+  const rain = current.precipitation || 0;
+  const code = current.weather_code;
+  // codes 51+ roughly = drizzle/rain/snow/storm
+  if(rain > 0.3 || (code && code >= 51)) return false;
+  return true;
+}
+
+function weatherIcon(current){
+  if(!current) return '🌤️';
+  const code = current.weather_code;
+  if(code >= 95) return '⛈️';
+  if(code >= 71) return '❄️';
+  if(code >= 51) return '🌧️';
+  if(code >= 45) return '🌫️';
+  if(code === 0) return '☀️';
+  if(code <= 3) return '⛅';
+  return '🌤️';
+}
+
+/* ============ CONTENT POOLS ============ */
+const CONTENT = {
+  recipe: {
+    nl:["Zoek eens een one-pot ovenschotel met wat groente en kruiden die je toch al in huis hebt.","Maak vandaag een simpele soep — ui, wortel, bouillon, en wat je verder nog vindt."],
+    en:["Try a simple one-pot bake with vegetables you already have.","Make a simple soup today — onion, carrot, stock, and whatever else you find."],
+    it:["Prova una teglia unica con le verdure che hai già in casa.","Fai una zuppa semplice oggi — cipolla, carota, brodo e quello che trovi."],
+    fr:["Essayez un plat unique au four avec les légumes que vous avez déjà.","Préparez une soupe simple aujourd'hui."],
+    de:["Probiere einen einfachen Auflauf mit dem Gemüse, das du schon hast.","Koche heute eine einfache Suppe."],
+    es:["Prueba un plato único al horno con verduras que ya tienes.","Prepara una sopa sencilla hoy."],
+    uk:["Спробуйте просту запіканку з овочами, які вже є вдома.","Приготуйте сьогодні простий суп."],
+    tr:["Evde olan sebzelerle basit bir fırın yemeği dene.","Bugün basit bir çorba yap."],
+  },
+  plantsIndoor: {
+    nl:["Geef je kamerplanten vandaag wat aandacht — verwijder dode blaadjes en draai ze richting het licht.","Verpot een kamerplant die al even te groot is voor zijn pot."],
+    en:["Give your houseplants some attention today — remove dead leaves and turn them toward the light.","Repot a houseplant that's outgrown its pot."],
+    it:["Dedica oggi un po' di attenzione alle piante d'appartamento.","Rinvasa una pianta che ha superato il suo vaso."],
+    fr:["Prenez soin de vos plantes d'intérieur aujourd'hui.","Rempotez une plante devenue trop grande pour son pot."],
+    de:["Widme deinen Zimmerpflanzen heute etwas Aufmerksamkeit.","Topf eine Pflanze um, die zu groß für ihren Topf geworden ist."],
+    es:["Dedica hoy un poco de atención a tus plantas de interior.","Trasplanta una planta que ya no cabe en su maceta."],
+    uk:["Приділіть сьогодні увагу кімнатним рослинам.","Пересадіть рослину, якій замалий горщик."],
+    tr:["Bugün iç mekan bitkilerine biraz zaman ayır.","Saksısına sığmayan bir bitkiyi başka saksıya aktar."],
+  },
+  gardenOutdoor: {
+    nl:["Mooi weer vandaag — ideaal om even in de tuin of op het balkon te werken.","Ga naar buiten en pluk of koop een bosje bloemen om het huis op te fleuren."],
+    en:["Nice weather today — a good moment to work in the garden or on the balcony.","Go outside and pick or buy a bunch of flowers to brighten up the house."],
+    it:["Bel tempo oggi — un buon momento per il giardino o il balcone.","Esci e raccogli o compra un mazzo di fiori."],
+    fr:["Beau temps aujourd'hui — bon moment pour le jardin ou le balcon.","Sortez et cueillez ou achetez un bouquet de fleurs."],
+    de:["Schönes Wetter heute — guter Moment für Garten oder Balkon.","Geh raus und hol dir einen Blumenstrauß."],
+    es:["Buen tiempo hoy — buen momento para el jardín o el balcón.","Sal y consigue un ramo de flores."],
+    uk:["Гарна погода сьогодні — час попрацювати в саду чи на балконі.","Вийдіть і зберіть або купіть букет квітів."],
+    tr:["Bugün hava güzel — bahçe ya da balkon için iyi bir zaman.","Dışarı çık ve bir demet çiçek al ya da topla."],
+  },
+  walk:{
+    nl:["Mooi weer om een blokje om te lopen — 20 minuten is al genoeg.","Pak de fiets en verken vandaag een straat waar je nog nooit bent geweest."],
+    en:["Good weather for a short walk — 20 minutes is enough.","Take the bike and explore a street you've never been to."],
+    it:["Bel tempo per una breve passeggiata — bastano 20 minuti.","Prendi la bici ed esplora una via mai vista prima."],
+    fr:["Beau temps pour une courte marche — 20 minutes suffisent.","Prenez le vélo et explorez une rue inconnue."],
+    de:["Gutes Wetter für einen kurzen Spaziergang.","Nimm das Fahrrad und erkunde eine neue Straße."],
+    es:["Buen tiempo para un paseo corto.","Coge la bici y explora una calle nueva."],
+    uk:["Гарна погода для короткої прогулянки.","Візьміть велосипед і дослідіть нову вулицю."],
+    tr:["Kısa bir yürüyüş için hava uygun.","Bisikleti al ve hiç gitmediğin bir sokağı keşfet."],
+  },
+  book:{
+    nl:["Leen een boek bij de bibliotheek dat je al lang wilde lezen.","Lees vandaag 20 minuten in een boek — gewoon voor jezelf."],
+    en:["Borrow a book from the library you've wanted to read for a while.","Read for 20 minutes today — just for yourself."],
+    it:["Prendi in prestito un libro che volevi leggere da tempo.","Leggi 20 minuti oggi, solo per te."],
+    fr:["Empruntez un livre que vous vouliez lire depuis longtemps.","Lisez 20 minutes aujourd'hui, juste pour vous."],
+    de:["Leih dir ein Buch aus, das du schon lange lesen wolltest.","Lies heute 20 Minuten, nur für dich."],
+    es:["Toma prestado un libro que querías leer hace tiempo.","Lee 20 minutos hoy, solo para ti."],
+    uk:["Візьміть у бібліотеці книгу, яку давно хотіли прочитати.","Почитайте сьогодні 20 хвилин для себе."],
+    tr:["Kütüphaneden uzun zamandır okumak istediğin bir kitabı al.","Bugün sadece kendin için 20 dakika oku."],
+  },
+  volunteer:{
+    nl:["Zoek eens uit of er een buurtinitiatief is waar jong en oud samenwerken — vaak leuker dan gedacht.","Overweeg een middagje vrijwilligerswerk bij een lokale organisatie."],
+    en:["Look into a local initiative where young and old work together — often more fun than expected.","Consider an afternoon of volunteering at a local organisation."],
+    it:["Scopri se c'è un'iniziativa dove giovani e anziani collaborano.","Considera un pomeriggio di volontariato."],
+    fr:["Renseignez-vous sur une initiative locale entre jeunes et moins jeunes.","Envisagez un après-midi de bénévolat."],
+    de:["Erkundige dich nach einer Initiative, bei der Jung und Alt zusammenarbeiten.","Erwäge einen Nachmittag Ehrenamt."],
+    es:["Infórmate sobre una iniciativa local entre jóvenes y mayores.","Considera una tarde de voluntariado."],
+    uk:["Дізнайтеся про місцеву ініціативу, де молодь і старші працюють разом.","Розгляньте пообіддя волонтерства."],
+    tr:["Genç ve yaşlıların birlikte çalıştığı yerel bir girişimi araştır.","Bir öğleden sonra gönüllülük yapmayı düşün."],
+  },
+  language:{
+    nl:["Leer vandaag 5 nieuwe woorden in de taal die je wilde leren.","Zoek een gratis app of podcast om verder te gaan met je taal."],
+    en:["Learn 5 new words today in the language you wanted to learn.","Find a free app or podcast to continue with your language."],
+    it:["Impara oggi 5 nuove parole nella lingua che volevi imparare.","Trova un'app o un podcast gratuito."],
+    fr:["Apprenez 5 nouveaux mots aujourd'hui.","Trouvez une application ou un podcast gratuit."],
+    de:["Lerne heute 5 neue Wörter.","Finde eine kostenlose App oder einen Podcast."],
+    es:["Aprende hoy 5 palabras nuevas.","Encuentra una app o podcast gratuito."],
+    uk:["Вивчіть сьогодні 5 нових слів.","Знайдіть безкоштовний додаток або подкаст."],
+    tr:["Bugün 5 yeni kelime öğren.","Ücretsiz bir uygulama veya podcast bul."],
+  },
+  surprise:{
+    nl:["Verrassingstip: bel iemand die je al een tijd niet gesproken hebt, gewoon om te horen hoe het gaat.","Verrassingstip: probeer vandaag iets dat je normaal nooit zou doen — een nieuw recept, een nieuwe route, een nieuw muziekgenre."],
+    en:["Surprise tip: call someone you haven't spoken to in a while, just to check in.","Surprise tip: try something today you'd normally never do — a new recipe, a new route, a new music genre."],
+    it:["Suggerimento a sorpresa: chiama qualcuno che non senti da tempo.","Suggerimento a sorpresa: prova oggi qualcosa che normalmente non faresti."],
+    fr:["Idée surprise : appelez quelqu'un que vous n'avez pas contacté depuis longtemps.","Idée surprise : essayez aujourd'hui quelque chose de nouveau."],
+    de:["Überraschungstipp: ruf jemanden an, mit dem du lange nicht gesprochen hast.","Überraschungstipp: probiere heute etwas ganz Neues aus."],
+    es:["Consejo sorpresa: llama a alguien con quien no hablas hace tiempo.","Consejo sorpresa: prueba hoy algo que normalmente no harías."],
+    uk:["Порада-сюрприз: зателефонуйте тому, з ким давно не спілкувались.","Порада-сюрприз: спробуйте сьогодні щось нове."],
+    tr:["Sürpriz öneri: uzun zamandır konuşmadığın birini ara.","Sürpriz öneri: bugün hiç yapmayacağın bir şeyi dene."],
+  },
+};
+
+function pick(arr, seed){
+  return arr[seed % arr.length];
+}
+
+function dayNumber(){
+  const start = new Date(2026,0,1);
+  const now = new Date();
+  return Math.floor((now - start) / (1000*60*60*24));
+}
+
+async function renderToday(){
+  const el = document.getElementById('todayContent');
+  const profile = loadProfile();
+  const seed = dayNumber();
+  const name = profile.name ? profile.name : '';
+  const people = loadPeople();
+
+  let weatherHtml = '';
+  let goodWeather = null;
+  if(profile.place){
+    weatherCache = weatherCache || await getWeather(profile.place);
+    goodWeather = isDecentWeather(weatherCache);
+    if(weatherCache){
+      weatherHtml = `<div class="weather-pill">${weatherIcon(weatherCache)} ${Math.round(weatherCache.temperature_2m)}°C — ${profile.place}</div>`;
+    }
+  }
+
+  // decide suggestion category
+  const interests = profile.interests || [];
+  let pool = [];
+  let poolName = 'recipe';
+
+  const outdoorInterest = interests.includes(2) || interests.includes(3); // walk/cycle
+  const gardenInterest = interests.includes(4);
+  const indoorPlantInterest = interests.includes(7);
+
+  const options = [];
+  options.push('recipe');
+  if(interests.includes(1)) options.push('book');
+  if(gardenInterest){
+    if(goodWeather === false) options.push('plantsIndoor');
+    else if(goodWeather === true) options.push('gardenOutdoor');
+    else options.push('plantsIndoor','gardenOutdoor');
+  }
+  if(indoorPlantInterest) options.push('plantsIndoor');
+  if(outdoorInterest && goodWeather !== false) options.push('walk');
+  if(profile.volunteer) options.push('volunteer');
+  if(profile.language) options.push('language');
+
+  poolName = options[seed % options.length];
+  let content = pick(CONTENT[poolName][currentLang] || CONTENT[poolName].nl, seed);
+
+  if(poolName === 'language' && profile.languageWhich){
+    content = content.replace(/\b(taal|language|lingua|langue|Sprache|idioma|мову|dil)\b/i, profile.languageWhich);
+  }
+
+  // surprise override occasionally (every 6th day if enabled)
+  if(profile.surprise && seed % 6 === 0){
+    poolName = 'surprise';
+    content = pick(CONTENT.surprise[currentLang] || CONTENT.surprise.nl, seed);
+  }
+
+  // upcoming birthday check (within 5 days)
+  let upcomingHtml = '';
+  const soon = people.map(p=>({...p, days: daysUntilNextAnniversary(p.date)})).filter(p=>p.days<=5).sort((a,b)=>a.days-b.days);
+  if(soon.length){
+    const p = soon[0];
+    upcomingHtml = `<div class="weather-pill">🎂 ${t('upcoming')} ${p.name} — ${t('inDays').replace('{n}', p.days)}</div>`;
+  }
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="meta">${t('todayLabel')}${name? ', '+name : ''}</div>
+      ${weatherHtml}${upcomingHtml}
+      <p>${content}</p>
+    </div>
+  `;
+
+  // pre-fill share text
+  const msgEl = document.getElementById('cardMsg');
+  if(msgEl && !msgEl.dataset.userEdited){
+    msgEl.value = content + '\n\n' + t('signoff');
+  }
+}
+
+document.getElementById('cardMsg').addEventListener('input', (e)=>{
+  e.target.dataset.userEdited = "1";
+});
+
+/* ============ CARD RENDER / SHARE ============ */
+const canvas = document.getElementById('cardCanvas');
+const ctx = canvas.getContext('2d');
+let uploadedImg = null;
+
+document.getElementById('cardPhoto').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    const img = new Image();
+    img.onload = ()=>{ uploadedImg = img; drawCard(); };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+function drawCard(){
+  // background paper
+  ctx.fillStyle = '#EDE6D6';
+  ctx.fillRect(0,0,canvas.width, canvas.height);
+
+  // photo area (left)
+  const photoW = canvas.width * 0.45;
+  if(uploadedImg){
+    const iw = uploadedImg.width, ih = uploadedImg.height;
+    const scale = Math.max(photoW/iw, canvas.height/ih);
+    const dw = iw*scale, dh = ih*scale;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(30,30,photoW-30, canvas.height-60);
+    ctx.clip();
+    ctx.drawImage(uploadedImg, 30 - (dw-(photoW-30))/2, 30 - (dh-(canvas.height-60))/2, dw, dh);
+    ctx.restore();
+  } else {
+    ctx.strokeStyle = 'rgba(43,58,66,0.3)';
+    ctx.setLineDash([8,6]);
+    ctx.strokeRect(30,30,photoW-30, canvas.height-60);
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(43,58,66,0.4)';
+    ctx.font = '22px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('♥', photoW/2+15, canvas.height/2);
+  }
+
+  // divider
+  ctx.strokeStyle = 'rgba(43,58,66,0.2)';
+  ctx.beginPath();
+  ctx.moveTo(photoW+15, 30);
+  ctx.lineTo(photoW+15, canvas.height-30);
+  ctx.stroke();
+
+  // stamp
+  ctx.save();
+  ctx.translate(canvas.width-100, 70);
+  ctx.rotate(-0.08);
+  ctx.strokeStyle = '#B5533C';
+  ctx.setLineDash([5,4]);
+  ctx.lineWidth = 3;
+  ctx.strokeRect(-45,-35,90,70);
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#B5533C';
+  ctx.font = 'italic 14px "Fraunces", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Naast Je', 0, 5);
+  ctx.restore();
+
+  // message text
+  const msg = document.getElementById('cardMsg').value || '';
+  ctx.fillStyle = '#2B3A42';
+  ctx.textAlign = 'left';
+  ctx.font = 'italic 26px "Fraunces", serif';
+  wrapText(ctx, msg, photoW+45, 160, canvas.width - photoW - 90, 34);
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight){
+  const paragraphs = text.split('\n');
+  let curY = y;
+  paragraphs.forEach(par=>{
+    const words = par.split(' ');
+    let line = '';
+    words.forEach(word=>{
+      const test = line + word + ' ';
+      if(ctx.measureText(test).width > maxWidth && line !== ''){
+        ctx.fillText(line, x, curY);
+        line = word + ' ';
+        curY += lineHeight;
+      } else {
+        line = test;
+      }
+    });
+    ctx.fillText(line, x, curY);
+    curY += lineHeight;
+  });
+}
+
+document.getElementById('renderCard').addEventListener('click', drawCard);
+
+document.getElementById('downloadCard').addEventListener('click', ()=>{
+  drawCard();
+  const link = document.createElement('a');
+  link.download = 'briefkaart-naastje.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+});
+
+document.getElementById('shareCard').addEventListener('click', async ()=>{
+  drawCard();
+  canvas.toBlob(async (blob)=>{
+    const file = new File([blob], 'briefkaart-naastje.png', {type:'image/png'});
+    if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+      try{
+        await navigator.share({files:[file], title:'Naast Je'});
+      }catch(e){ /* user cancelled */ }
+    } else {
+      const link = document.createElement('a');
+      link.download = 'briefkaart-naastje.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  }, 'image/png');
+});
+
+/* ============ INIT ============ */
+buildLangSelector();
+fillProfileForm();
+applyI18n();
+setTimeout(drawCard, 300);
+
+/* Service worker for offline */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
