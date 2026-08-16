@@ -1,41 +1,44 @@
-// Briefkaart · Cartolina — service worker
-// Netwerk-eerst: bij een update op Vercel krijg je meteen de nieuwste versie.
-// Alleen als er geen internet is, valt de app terug op de laatst opgeslagen kopie (offline-gebruik).
-const CACHE = "briefkaart-v4";
-const SHELL = ["./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./stamp.jpg", "./print.html", "./verlanglijstje.html", "./stamp-wish.jpg"];
+const CACHE_NAME = 'naastje-v1';
+const ASSETS = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
+];
 
-self.addEventListener("install", (event) => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(SHELL)).catch(() => {})
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).catch(()=>{})
   );
   self.skipWaiting();
 });
 
-self.addEventListener("activate", (event) => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
+      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
     )
   );
   self.clients.claim();
 });
 
-self.addEventListener("fetch", (event) => {
-  const req = event.request;
-  if (req.method !== "GET") return;
-  if (!req.url.startsWith(self.location.origin)) return;
-
-  // Netwerk-eerst: altijd de laatste versie proberen te halen; alleen bij
-  // een mislukte/offline fetch terugvallen op wat er in de cache staat.
+self.addEventListener('fetch', (event) => {
+  const url = event.request.url;
+  // Let weather/geocoding API calls go straight to network (not cached, needs live data)
+  if (url.includes('open-meteo.com')) {
+    event.respondWith(fetch(event.request).catch(() => new Response('{}', {headers:{'Content-Type':'application/json'}})));
+    return;
+  }
   event.respondWith(
-    fetch(req, { cache: "no-store" })
-      .then((res) => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE).then((cache) => cache.put(req, copy));
+    caches.match(event.request).then((cached) => {
+      return cached || fetch(event.request).then((response) => {
+        if (response && response.status === 200 && event.request.method === 'GET') {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }
-        return res;
-      })
-      .catch(() => caches.match(req))
+        return response;
+      }).catch(() => cached);
+    })
   );
 });
