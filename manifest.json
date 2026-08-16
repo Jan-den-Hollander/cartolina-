@@ -1,0 +1,14 @@
+{
+  "name": "Briefkaart · Cartolina",
+  "short_name": "Briefkaart",
+  "description": "Schrijf een digitale briefkaart — voor een verlanglijstje, of een periodieke kaart tegen eenzaamheid.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#2B2024",
+  "theme_color": "#2B2024",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
