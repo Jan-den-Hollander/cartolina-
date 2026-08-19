@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2B2024">
+<title>Intake · Naast Je</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#2B2024; --panel:#372A2E; --panel-2:#443338; --border:#5A444B;
+--ink-ui:#F5EBE0; --muted:#C9AFA0; --accent-red:#D0405A; --accent-blue:#3E63B8;
+--accent-gold:#D8A34E; --accent-teal:#4F9C8C; --paper:#F0E7D6; --focus:#E8B86A;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:linear-gradient(180deg,var(--bg),#241B1E 60%);color:var(--ink-ui);font-family:'IBM Plex Mono',monospace;
+-webkit-tap-highlight-color:transparent;padding-bottom:56px;}
+header{padding:18px 16px 8px;}
+h1{font-family:'Fraunces',serif;font-weight:600;font-style:italic;font-size:1.5rem;margin:0;letter-spacing:.2px;
+background:linear-gradient(90deg,var(--focus),var(--accent-red));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.sub{color:var(--muted);font-size:.78rem;margin-top:4px;line-height:1.5;}
+.backlink{display:inline-block;margin-top:10px;font-size:.75rem;color:var(--accent-gold);text-decoration:none;}
+
+.langrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:6px auto 14px;padding:0 16px;max-width:720px;}
+.langbtn{background:var(--panel-2);border:2px solid var(--border);color:var(--ink-ui);
+font-family:'IBM Plex Mono',monospace;font-size:1.4rem;line-height:1;width:52px;height:48px;
+border-radius:12px;cursor:pointer;letter-spacing:.4px;display:flex;align-items:center;justify-content:center;padding:0;}
+.langbtn[aria-pressed="true"]{border-color:var(--focus);box-shadow:0 0 0 2px rgba(232,184,106,0.25);}
+
+main{max-width:720px;margin:0 auto;padding:0 16px;}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin:12px 0;border-left:3px solid var(--accent-blue);}
+.panel h2{font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:1rem;margin:0 0 4px;color:var(--ink-ui);}
+.panel .hint{font-size:.75rem;color:var(--muted);margin-bottom:12px;line-height:1.5;}
+label{display:block;font-size:.72rem;color:var(--muted);margin:14px 0 5px;letter-spacing:.3px;text-transform:uppercase;}
+label:first-of-type{margin-top:0;}
+input[type=text], select{width:100%;background:var(--panel-2);border:1px solid var(--border);color:var(--ink-ui);
+border-radius:8px;padding:10px 11px;font-family:inherit;font-size:.9rem;}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{border:1px solid var(--border);color:var(--ink-ui);background:var(--panel-2);border-radius:20px;
+padding:8px 15px;font-size:.82rem;cursor:pointer;font-family:inherit;}
+.chip[aria-pressed="true"]{border-color:var(--accent-gold);color:var(--accent-gold);background:rgba(216,163,78,.12);font-weight:600;}
+
+.check{display:flex;align-items:flex-start;gap:10px;margin-top:14px;}
+.check input{margin-top:3px;width:18px;height:18px;flex-shrink:0;}
+.check label{margin:0;text-transform:none;font-size:.85rem;color:var(--ink-ui);letter-spacing:0;}
+
+.btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+button.action{flex:1;min-width:140px;background:var(--accent-gold);color:var(--bg);border:none;border-radius:9px;
+padding:13px;font-family:inherit;font-weight:600;font-size:.9rem;cursor:pointer;}
+button.action.secondary{background:none;border:1px solid var(--accent-gold);color:var(--accent-gold);}
+button.action.tertiary{background:none;border:1px solid var(--border);color:var(--muted);flex:1 0 100%;}
+#saveMsg{font-size:.78rem;color:var(--accent-teal);margin-top:8px;min-height:1em;text-align:center;}
+
+.footer-line{text-align:center;font-size:.7rem;color:var(--muted);margin:26px 0 10px;line-height:1.6;}
+.footer-line a{color:var(--accent-gold);text-decoration:none;}
+
+#printSheet{display:none;}
+@media print{
+  body *{visibility:hidden;}
+  #printSheet, #printSheet *{visibility:visible;}
+  #printSheet{display:block !important;position:absolute;top:0;left:0;width:100%;
+    background:#fff;color:#1a1a1a;font-family:'IBM Plex Mono',monospace;padding:30px;}
+  #printSheet h1{font-family:'Fraunces',serif;font-style:italic;color:#1a1a1a;background:none;-webkit-text-fill-color:#1a1a1a;font-size:1.6rem;margin-bottom:4px;}
+  #printSheet .row{margin-bottom:10px;font-size:.95rem;line-height:1.5;border-bottom:1px solid #ddd;padding-bottom:8px;}
+  #printSheet .row b{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#777;margin-bottom:2px;}
+}
+</style>
+</head>
+<body>
+<header>
+<h1 data-i18n="pageTitle">Intake</h1>
+<div class="sub" data-i18n="pageSub">Voorkeuren van iemand die een beetje aandacht kan gebruiken — voor een persoonlijke kaart via Naast Je. Vul in, print of deel.</div>
+<a class="backlink" href="eenzaamheid.html" data-i18n="backLink">← Terug naar Naast Je</a>
+</header>
+
+<div class="langrow" id="langRow">
+<button type="button" class="langbtn" data-lang="nl" aria-pressed="true" title="Nederlands">🇳🇱</button>
+<button type="button" class="langbtn" data-lang="en" aria-pressed="false" title="English">🇬🇧</button>
+<button type="button" class="langbtn" data-lang="it" aria-pressed="false" title="Italiano">🇮🇹</button>
+<button type="button" class="langbtn" data-lang="fr" aria-pressed="false" title="Français">🇫🇷</button>
+<button type="button" class="langbtn" data-lang="de" aria-pressed="false" title="Deutsch">🇩🇪</button>
+<button type="button" class="langbtn" data-lang="es" aria-pressed="false" title="Español">🇪🇸</button>
+<button type="button" class="langbtn" data-lang="uk" aria-pressed="false" title="Українська">🇺🇦</button>
+<button type="button" class="langbtn" data-lang="tr" aria-pressed="false" title="Türkçe">🇹🇷</button>
+</div>
+
+<main>
+<div class="panel">
+<h2 data-i18n="filledByTitle">Ingevuld door</h2>
+<select id="filledBy">
+<option value="self" data-i18n="filledBySelf">Door mezelf</option>
+<option value="family" data-i18n="filledByFamily">Door een naaste</option>
+<option value="staff" data-i18n="filledByStaff">Door verzorging / vrijwilliger</option>
+</select>
+</div>
+
+<div class="panel">
+<h2 data-i18n="formTitle">Voorkeuren</h2>
+<div class="hint" data-i18n="formHint">Alles is vrijwillig — vul in wat prettig voelt om te delen, sla gerust dingen over.</div>
+
+<label for="in_name" data-i18n="lblName">Naam / aanspreekvorm</label>
+<input type="text" id="in_name" placeholder="">
+
+<label for="in_place" data-i18n="lblPlace">Plaats (voor het weer)</label>
+<input type="text" id="in_place" placeholder="">
+
+<label data-i18n="lblInterests">Interesses</label>
+<div class="chips" id="interestChips"></div>
+
+<label for="in_hobbies" data-i18n="lblHobbies">Andere hobby's (vrije invoer)</label>
+<input type="text" id="in_hobbies" placeholder="">
+
+<div id="musicGenreWrap" style="display:none;">
+<label for="in_music" data-i18n="lblMusic">Welk muziekgenre?</label>
+<input type="text" id="in_music" placeholder="">
+</div>
+
+<label for="in_age" data-i18n="lblAge">Leeftijdscategorie (optioneel)</label>
+<select id="in_age">
+<option value="" data-i18n="ageNone">— liever niet zeggen —</option>
+<option value="young" data-i18n="ageYoung">Jongere / student</option>
+<option value="adult" data-i18n="ageAdult">Volwassene</option>
+<option value="older" data-i18n="ageOlder">Oudere</option>
+</select>
+
+<label for="in_budget" data-i18n="lblBudget">Budget voor uitjes</label>
+<select id="in_budget">
+<option value="krap" data-i18n="budgetLow">Krap — liever gratis / thuis</option>
+<option value="gemiddeld" data-i18n="budgetMid">Gemiddeld</option>
+<option value="ruim" data-i18n="budgetHigh">Ruim</option>
+</select>
+
+<label for="in_social" data-i18n="lblSocial">Sociale voorkeur</label>
+<select id="in_social">
+<option value="thuis" data-i18n="socialHome">Liever thuis-suggesties</option>
+<option value="mix" data-i18n="socialMix">Mix van thuis en onder de mensen</option>
+<option value="buiten" data-i18n="socialOut">Het liefst onder de mensen</option>
+</select>
+
+<div class="check">
+<input type="checkbox" id="in_volunteer">
+<label for="in_volunteer" data-i18n="lblVolunteer">Interesse in vrijwilligerswerk, ook intergenerationeel</label>
+</div>
+
+<div class="check">
+<input type="checkbox" id="in_language">
+<label for="in_language" data-i18n="lblLanguage">Wil een taal leren</label>
+</div>
+<div id="languageWhichWrap" style="display:none;">
+<label for="in_language_which" data-i18n="lblLanguageWhich">Welke taal?</label>
+<input type="text" id="in_language_which" placeholder="">
+</div>
+
+<div class="check">
+<input type="checkbox" id="in_surprise">
+<label for="in_surprise" data-i18n="lblSurprise">Houdt van een verrassingstip buiten de comfortzone</label>
+</div>
+
+<label for="in_demo" data-i18n="lblDemoFree">Verder nog iets relevants (optioneel)</label>
+<input type="text" id="in_demo" placeholder="">
+
+<label for="in_free" data-i18n="lblFree">Eigen idee of verzoek (helemaal vrij, optioneel)</label>
+<input type="text" id="in_free" placeholder="">
+</div>
+
+<div class="btn-row">
+<button type="button" class="action" id="printBtn" data-i18n="btnPrint">🖨️ Printen</button>
+<button type="button" class="action secondary" id="shareBtn" data-i18n="btnShare">📤 Delen</button>
+</div>
+<div class="btn-row">
+<button type="button" class="action tertiary" id="saveLinkedBtn" data-i18n="btnSaveLinked">💾 Opslaan als gekoppeld profiel in Naast Je</button>
+<div class="hint" style="margin:6px 0 0;text-align:center;" data-i18n="saveLinkedHint">Werkt alleen als je dít formulier zelf invult op hetzelfde toestel waarmee je straks de kaart maakt. Vult iemand anders het in, op hun eigen telefoon of op papier? Gebruik dan printen of delen — jij tikt de voorkeuren dan zelf over in Naast Je.</div>
+</div>
+<div id="saveMsg"></div>
+
+<div class="footer-line">
+<span data-i18n="footerText">Onderdeel van</span> <a href="eenzaamheid.html">Naast Je</a> · © 2026 Jan den Hollander
+</div>
+</main>
+
+<div id="printSheet">
+<h1>Naast Je — Intake</h1>
+<div class="row"><b id="ps_lbl_filledby"></b><span id="ps_filledby"></span></div>
+<div class="row"><b id="ps_lbl_name"></b><span id="ps_name"></span></div>
+<div class="row"><b id="ps_lbl_place"></b><span id="ps_place"></span></div>
+<div class="row"><b id="ps_lbl_interests"></b><span id="ps_interests"></span></div>
+<div class="row"><b id="ps_lbl_hobbies"></b><span id="ps_hobbies"></span></div>
+<div class="row"><b id="ps_lbl_music"></b><span id="ps_music"></span></div>
+<div class="row"><b id="ps_lbl_age"></b><span id="ps_age"></span></div>
+<div class="row"><b id="ps_lbl_budget"></b><span id="ps_budget"></span></div>
+<div class="row"><b id="ps_lbl_social"></b><span id="ps_social"></span></div>
+<div class="row"><b id="ps_lbl_volunteer"></b><span id="ps_volunteer"></span></div>
+<div class="row"><b id="ps_lbl_language"></b><span id="ps_language"></span></div>
+<div class="row"><b id="ps_lbl_surprise"></b><span id="ps_surprise"></span></div>
+<div class="row"><b id="ps_lbl_demo"></b><span id="ps_demo"></span></div>
+<div class="row"><b id="ps_lbl_free"></b><span id="ps_free"></span></div>
+</div>
+
+<script>
+const TR = {
+nl:{pageTitle:"Intake", pageSub:"Dit zijn de voorkeuren van iemand die een beetje aandacht kan gebruiken — nodig om een persoonlijke kaart te kunnen ontvangen. Vul in, print of deel dit na het invullen. Zo kan de verstuurder hier rekening mee houden in zijn tekst.", backLink:"← Terug naar Naast Je",
+filledByTitle:"Ingevuld door", filledBySelf:"Door mezelf", filledByFamily:"Door een naaste", filledByStaff:"Door verzorging / vrijwilliger",
+formTitle:"Voorkeuren", formHint:"Alles is vrijwillig — vul in wat prettig voelt om te delen, sla gerust dingen over.",
+lblName:"Naam / aanspreekvorm", lblPlace:"Plaats (voor het weer)", lblInterests:"Interesses", lblHobbies:"Andere hobby's (vrije invoer)", lblMusic:"Welk muziekgenre?",
+lblAge:"Leeftijdscategorie (optioneel)", ageNone:"— liever niet zeggen —", ageYoung:"Jongere / student", ageAdult:"Volwassene", ageOlder:"Oudere",
+lblBudget:"Budget voor uitjes", budgetLow:"Krap — liever gratis / thuis", budgetMid:"Gemiddeld", budgetHigh:"Ruim",
+lblSocial:"Sociale voorkeur", socialHome:"Liever thuis-suggesties", socialMix:"Mix van thuis en onder de mensen", socialOut:"Het liefst onder de mensen",
+lblVolunteer:"Interesse in vrijwilligerswerk, ook intergenerationeel", lblLanguage:"Wil een taal leren", lblLanguageWhich:"Welke taal?",
+lblSurprise:"Houdt van een verrassingstip buiten de comfortzone", lblDemoFree:"Verder nog iets relevants (optioneel)", lblFree:"Eigen idee of verzoek (helemaal vrij, optioneel)",
+btnPrint:"🖨️ Printen", btnShare:"📤 Delen", btnSaveLinked:"💾 Opslaan als gekoppeld profiel in Naast Je", saveLinkedHint:"Opslaan heeft alleen nut als je dít formulier zelf invult op hetzelfde toestel waarmee je straks de kaart maakt. Vult iemand anders het in, op hun eigen telefoon of op papier? Gebruik dan printen of delen — jij tikt de voorkeuren dan zelf over in Naast Je.",
+savedOk:"Opgeslagen — open Naast Je en kies 'Gekoppelde persoon' bij Jouw voorkeuren.", shareOk:"Deelvenster geopend.", shareFail:"Delen niet ondersteund — tekst is gekopieerd naar het klembord.",
+footerText:"Onderdeel van", interests:["Koken","Lezen","Wandelen","Fietsen","Tuin & planten","Muziek","Vrijwilligerswerk","Kamerplanten","Vissen","Schrijven"],
+yes:"Ja", no:"—", none:"(niet ingevuld)"},
+en:{pageTitle:"Intake", pageSub:"These are the preferences of someone who could use a little attention — needed to receive a personal card. Fill in, then print or share this. That way the sender can take it into account in what they write.", backLink:"← Back to Naast Je",
+filledByTitle:"Filled in by", filledBySelf:"By myself", filledByFamily:"By a family member", filledByStaff:"By care staff / a volunteer",
+formTitle:"Preferences", formHint:"Everything is voluntary — fill in whatever feels comfortable to share, skip the rest.",
+lblName:"Name / preferred form of address", lblPlace:"City (for weather)", lblInterests:"Interests", lblHobbies:"Other hobbies (free text)", lblMusic:"Which music genre?",
+lblAge:"Age category (optional)", ageNone:"— prefer not to say —", ageYoung:"Younger / student", ageAdult:"Adult", ageOlder:"Older",
+lblBudget:"Budget for outings", budgetLow:"Tight — prefer free / at home", budgetMid:"Average", budgetHigh:"Comfortable",
+lblSocial:"Social preference", socialHome:"Prefer home suggestions", socialMix:"Mix of home and going out", socialOut:"Prefer going out",
+lblVolunteer:"Interested in volunteering, also intergenerational", lblLanguage:"Wants to learn a language", lblLanguageWhich:"Which language?",
+lblSurprise:"Likes an occasional surprise tip outside the comfort zone", lblDemoFree:"Anything else relevant (optional)", lblFree:"Own idea or request (fully free, optional)",
+btnPrint:"🖨️ Print", btnShare:"📤 Share", btnSaveLinked:"💾 Save as linked profile in Naast Je", saveLinkedHint:"Saving is only useful if you fill in this form yourself, on the same device you'll use to write the card. Does someone else fill it in, on their own phone or on paper? Use print or share instead — you'll then type the preferences into Naast Je yourself.",
+savedOk:"Saved — open Naast Je and choose 'Linked person' under Your preferences.", shareOk:"Share sheet opened.", shareFail:"Sharing not supported — text copied to clipboard.",
+footerText:"Part of", interests:["Cooking","Reading","Walking","Cycling","Garden & plants","Music","Volunteering","Houseplants","Fishing","Writing"],
+yes:"Yes", no:"—", none:"(not filled in)"},
+it:{pageTitle:"Intake", pageSub:"Queste sono le preferenze di qualcuno a cui farebbe bene un po' di attenzione — servono per ricevere una cartolina personale. Compila, poi stampa o condividi. Così chi scrive potrà tenerne conto nel testo.", backLink:"← Torna a Naast Je",
+filledByTitle:"Compilato da", filledBySelf:"Da me stesso/a", filledByFamily:"Da un familiare", filledByStaff:"Da personale di cura / volontario",
+formTitle:"Preferenze", formHint:"Tutto è facoltativo — compila ciò che ti va di condividere, salta il resto.",
+lblName:"Nome / come chiamarti", lblPlace:"Città (per il meteo)", lblInterests:"Interessi", lblHobbies:"Altri hobby (testo libero)", lblMusic:"Quale genere musicale?",
+lblAge:"Fascia d'età (facoltativo)", ageNone:"— preferisco non dirlo —", ageYoung:"Giovane / studente", ageAdult:"Adulto/a", ageOlder:"Anziano/a",
+lblBudget:"Budget per le uscite", budgetLow:"Limitato — meglio gratis / a casa", budgetMid:"Medio", budgetHigh:"Ampio",
+lblSocial:"Preferenza sociale", socialHome:"Preferisco suggerimenti da casa", socialMix:"Un mix di casa e uscite", socialOut:"Preferisco uscire",
+lblVolunteer:"Interesse per il volontariato, anche intergenerazionale", lblLanguage:"Vuole imparare una lingua", lblLanguageWhich:"Quale lingua?",
+lblSurprise:"Gradisce ogni tanto un suggerimento a sorpresa fuori dalla comfort zone", lblDemoFree:"Altro di rilevante (facoltativo)", lblFree:"Idea o richiesta propria (del tutto libera, facoltativa)",
+btnPrint:"🖨️ Stampa", btnShare:"📤 Condividi", btnSaveLinked:"💾 Salva come profilo abbinato in Naast Je", saveLinkedHint:"Salvare è utile solo se compili tu stesso questo modulo, sullo stesso dispositivo con cui poi scriverai la cartolina. Lo compila qualcun altro, sul proprio telefono o su carta? Usa allora stampa o condividi — poi trascriverai tu le preferenze in Naast Je.",
+savedOk:"Salvato — apri Naast Je e scegli 'Persona abbinata' in Le tue preferenze.", shareOk:"Finestra di condivisione aperta.", shareFail:"Condivisione non supportata — testo copiato negli appunti.",
+footerText:"Parte di", interests:["Cucina","Lettura","Camminare","Bicicletta","Giardino & piante","Musica","Volontariato","Piante d'appartamento","Pesca","Scrittura"],
+yes:"Sì", no:"—", none:"(non compilato)"},
+fr:{pageTitle:"Intake", pageSub:"Voici les préférences de quelqu'un qui pourrait profiter d'un peu d'attention — nécessaires pour recevoir une carte personnelle. Remplis, puis imprime ou partage ceci. Ainsi, la personne qui écrit pourra en tenir compte dans son texte.", backLink:"← Retour à Naast Je",
+filledByTitle:"Rempli par", filledBySelf:"Par moi-même", filledByFamily:"Par un proche", filledByStaff:"Par le personnel soignant / un bénévole",
+formTitle:"Préférences", formHint:"Tout est facultatif — remplis ce que tu es à l'aise de partager, saute le reste.",
+lblName:"Nom / comment t'appeler", lblPlace:"Ville (pour la météo)", lblInterests:"Intérêts", lblHobbies:"Autres loisirs (texte libre)", lblMusic:"Quel genre musical ?",
+lblAge:"Tranche d'âge (facultatif)", ageNone:"— préfère ne pas dire —", ageYoung:"Jeune / étudiant(e)", ageAdult:"Adulte", ageOlder:"Senior",
+lblBudget:"Budget pour les sorties", budgetLow:"Serré — préfère gratuit / à la maison", budgetMid:"Moyen", budgetHigh:"Confortable",
+lblSocial:"Préférence sociale", socialHome:"Préfère les suggestions à la maison", socialMix:"Un mélange des deux", socialOut:"Préfère sortir",
+lblVolunteer:"Intéressé(e) par le bénévolat, aussi intergénérationnel", lblLanguage:"Veut apprendre une langue", lblLanguageWhich:"Quelle langue ?",
+lblSurprise:"Aime de temps en temps une idée surprise hors de la zone de confort", lblDemoFree:"Autre chose de pertinent (facultatif)", lblFree:"Idée ou demande personnelle (entièrement libre, facultatif)",
+btnPrint:"🖨️ Imprimer", btnShare:"📤 Partager", btnSaveLinked:"💾 Enregistrer comme profil associé dans Naast Je", saveLinkedHint:"Enregistrer n'est utile que si tu remplis toi-même ce formulaire, sur le même appareil que celui avec lequel tu écriras la carte. Quelqu'un d'autre le remplit, sur son propre téléphone ou sur papier ? Utilise plutôt imprimer ou partager — tu retranscriras alors toi-même les préférences dans Naast Je.",
+savedOk:"Enregistré — ouvre Naast Je et choisis 'Personne associée' dans Tes préférences.", shareOk:"Fenêtre de partage ouverte.", shareFail:"Partage non pris en charge — texte copié dans le presse-papiers.",
+footerText:"Fait partie de", interests:["Cuisine","Lecture","Marche","Vélo","Jardin & plantes","Musique","Bénévolat","Plantes d'intérieur","Pêche","Écriture"],
+yes:"Oui", no:"—", none:"(non renseigné)"},
+de:{pageTitle:"Intake", pageSub:"Dies sind die Vorlieben von jemandem, der etwas Aufmerksamkeit gebrauchen könnte — nötig, um eine persönliche Karte zu erhalten. Ausfüllen, dann drucken oder teilen. So kann die schreibende Person das in ihrem Text berücksichtigen.", backLink:"← Zurück zu Naast Je",
+filledByTitle:"Ausgefüllt von", filledBySelf:"Von mir selbst", filledByFamily:"Von einem Angehörigen", filledByStaff:"Von Pflegepersonal / einem Freiwilligen",
+formTitle:"Vorlieben", formHint:"Alles ist freiwillig — trag ein, was du gerne teilst, lass den Rest weg.",
+lblName:"Name / Anrede", lblPlace:"Ort (für das Wetter)", lblInterests:"Interessen", lblHobbies:"Andere Hobbys (freier Text)", lblMusic:"Welches Musikgenre?",
+lblAge:"Altersgruppe (optional)", ageNone:"— sage ich lieber nicht —", ageYoung:"Jünger / Student", ageAdult:"Erwachsen", ageOlder:"Älter",
+lblBudget:"Budget für Ausflüge", budgetLow:"Knapp — lieber kostenlos / zu Hause", budgetMid:"Mittel", budgetHigh:"Großzügig",
+lblSocial:"Soziale Vorliebe", socialHome:"Lieber Vorschläge für zu Hause", socialMix:"Mischung aus beidem", socialOut:"Lieber unter Leute",
+lblVolunteer:"Interesse an Ehrenamt, auch generationsübergreifend", lblLanguage:"Möchte eine Sprache lernen", lblLanguageWhich:"Welche Sprache?",
+lblSurprise:"Mag ab und zu einen Überraschungstipp außerhalb der Komfortzone", lblDemoFree:"Noch etwas Relevantes (optional)", lblFree:"Eigene Idee oder Wunsch (völlig frei, optional)",
+btnPrint:"🖨️ Drucken", btnShare:"📤 Teilen", btnSaveLinked:"💾 Als verknüpftes Profil in Naast Je speichern", saveLinkedHint:"Speichern ist nur sinnvoll, wenn du dieses Formular selbst ausfüllst, auf demselben Gerät, mit dem du später die Karte schreibst. Füllt jemand anderes es aus, auf dem eigenen Handy oder auf Papier? Nutze dann Drucken oder Teilen — die Vorlieben trägst du dann selbst in Naast Je ein.",
+savedOk:"Gespeichert — öffne Naast Je und wähle 'Verknüpfte Person' bei Deine Einstellungen.", shareOk:"Teilen-Menü geöffnet.", shareFail:"Teilen nicht unterstützt — Text in die Zwischenablage kopiert.",
+footerText:"Teil von", interests:["Kochen","Lesen","Spazieren","Radfahren","Garten & Pflanzen","Musik","Ehrenamt","Zimmerpflanzen","Angeln","Schreiben"],
+yes:"Ja", no:"—", none:"(nicht ausgefüllt)"},
+es:{pageTitle:"Intake", pageSub:"Estas son las preferencias de alguien a quien le vendría bien un poco de atención — necesarias para recibir una postal personal. Rellena, luego imprime o comparte esto. Así quien la escriba podrá tenerlo en cuenta en su texto.", backLink:"← Volver a Naast Je",
+filledByTitle:"Rellenado por", filledBySelf:"Por mí mismo/a", filledByFamily:"Por un familiar", filledByStaff:"Por personal de cuidado / un voluntario",
+formTitle:"Preferencias", formHint:"Todo es voluntario — rellena lo que te resulte cómodo compartir, omite el resto.",
+lblName:"Nombre / cómo llamarte", lblPlace:"Ciudad (para el clima)", lblInterests:"Intereses", lblHobbies:"Otras aficiones (texto libre)", lblMusic:"¿Qué género musical?",
+lblAge:"Franja de edad (opcional)", ageNone:"— prefiero no decirlo —", ageYoung:"Joven / estudiante", ageAdult:"Adulto/a", ageOlder:"Mayor",
+lblBudget:"Presupuesto para salidas", budgetLow:"Ajustado — prefiero gratis / en casa", budgetMid:"Medio", budgetHigh:"Amplio",
+lblSocial:"Preferencia social", socialHome:"Prefiero sugerencias en casa", socialMix:"Una mezcla de ambos", socialOut:"Prefiero salir",
+lblVolunteer:"Interés en voluntariado, también intergeneracional", lblLanguage:"Quiere aprender un idioma", lblLanguageWhich:"¿Qué idioma?",
+lblSurprise:"Le gusta de vez en cuando un consejo sorpresa fuera de la zona de confort", lblDemoFree:"Algo más relevante (opcional)", lblFree:"Idea o petición propia (totalmente libre, opcional)",
+btnPrint:"🖨️ Imprimir", btnShare:"📤 Compartir", btnSaveLinked:"💾 Guardar como perfil vinculado en Naast Je", saveLinkedHint:"Guardar solo es útil si rellenas tú mismo/a este formulario, en el mismo dispositivo con el que luego escribirás la postal. ¿Lo rellena otra persona, en su propio teléfono o en papel? Usa entonces imprimir o compartir — luego transcribirás tú las preferencias en Naast Je.",
+savedOk:"Guardado — abre Naast Je y elige 'Persona vinculada' en Tus preferencias.", shareOk:"Panel para compartir abierto.", shareFail:"Compartir no compatible — texto copiado al portapapeles.",
+footerText:"Parte de", interests:["Cocina","Lectura","Caminar","Bicicleta","Jardín y plantas","Música","Voluntariado","Plantas de interior","Pesca","Escritura"],
+yes:"Sí", no:"—", none:"(no completado)"},
+uk:{pageTitle:"Анкета", pageSub:"Це уподобання людини, якій не завадить трохи уваги — потрібні, щоб отримати персональну листівку. Заповни, а потім роздрукуй або поділись цим. Тоді той, хто пише, зможе врахувати це у своєму тексті.", backLink:"← Назад до Naast Je",
+filledByTitle:"Заповнено ким", filledBySelf:"Мною самим/самою", filledByFamily:"Родичем", filledByStaff:"Персоналом догляду / волонтером",
+formTitle:"Уподобання", formHint:"Все добровільно — заповни те, чим зручно поділитися, решту пропусти.",
+lblName:"Ім'я / як звертатися", lblPlace:"Місто (для погоди)", lblInterests:"Інтереси", lblHobbies:"Інші хобі (вільний текст)", lblMusic:"Який музичний жанр?",
+lblAge:"Вікова категорія (необов'язково)", ageNone:"— краще не казати —", ageYoung:"Молодший/а / студент(ка)", ageAdult:"Дорослий/а", ageOlder:"Старший/а",
+lblBudget:"Бюджет на вилазки", budgetLow:"Обмежений — краще безкоштовно / вдома", budgetMid:"Середній", budgetHigh:"Достатній",
+lblSocial:"Соціальна перевага", socialHome:"Радше поради для дому", socialMix:"Поєднання обох", socialOut:"Радше серед людей",
+lblVolunteer:"Цікавить волонтерство, зокрема міжпоколіннєве", lblLanguage:"Хоче вивчати мову", lblLanguageWhich:"Яку мову?",
+lblSurprise:"Любить час від часу пораду-сюрприз поза зоною комфорту", lblDemoFree:"Ще щось релевантне (необов'язково)", lblFree:"Власна ідея чи прохання (повністю вільно, необов'язково)",
+btnPrint:"🖨️ Друк", btnShare:"📤 Поділитися", btnSaveLinked:"💾 Зберегти як пов'язаний профіль у Naast Je", saveLinkedHint:"Збереження корисне лише якщо ти сам/сама заповнюєш цю форму на тому ж пристрої, з якого потім писатимеш листівку. Заповнює хтось інший, на своєму телефоні чи на папері? Тоді скористайся друком або поділитися — потім ти сам/сама впишеш уподобання в Naast Je.",
+savedOk:"Збережено — відкрий Naast Je і обери 'Пов'язана людина' у Твоїх налаштуваннях.", shareOk:"Вікно надсилання відкрито.", shareFail:"Надсилання не підтримується — текст скопійовано в буфер обміну.",
+footerText:"Частина", interests:["Кулінарія","Читання","Прогулянки","Велосипед","Сад і рослини","Музика","Волонтерство","Кімнатні рослини","Риболовля","Письмо"],
+yes:"Так", no:"—", none:"(не заповнено)"},
+tr:{pageTitle:"Kabul formu", pageSub:"Bunlar biraz ilgiye ihtiyacı olan birinin tercihleri — kişisel bir kart alabilmesi için gerekli. Doldur, sonra yazdır ya da paylaş. Böylece yazan kişi bunu metninde dikkate alabilir.", backLink:"← Naast Je'ye dön",
+filledByTitle:"Dolduran", filledBySelf:"Kendim", filledByFamily:"Bir yakını", filledByStaff:"Bakım personeli / gönüllü",
+formTitle:"Tercihler", formHint:"Her şey gönüllü — paylaşmaktan rahat olduğun şeyleri doldur, gerisini atla.",
+lblName:"İsim / nasıl hitap edilsin", lblPlace:"Şehir (hava durumu için)", lblInterests:"İlgi alanları", lblHobbies:"Diğer hobiler (serbest metin)", lblMusic:"Hangi müzik türü?",
+lblAge:"Yaş kategorisi (isteğe bağlı)", ageNone:"— söylemek istemiyorum —", ageYoung:"Genç / öğrenci", ageAdult:"Yetişkin", ageOlder:"Yaşlı",
+lblBudget:"Dışarı çıkma bütçesi", budgetLow:"Dar — ücretsiz / evde tercih ederim", budgetMid:"Orta", budgetHigh:"Rahat",
+lblSocial:"Sosyal tercih", socialHome:"Ev önerilerini tercih ederim", socialMix:"İkisinin karışımı", socialOut:"Dışarı çıkmayı tercih ederim",
+lblVolunteer:"Gönüllülüğe ilgi, nesiller arası da olabilir", lblLanguage:"Bir dil öğrenmek istiyor", lblLanguageWhich:"Hangi dil?",
+lblSurprise:"Arada bir konfor alanının dışında bir sürpriz öneriyi sever", lblDemoFree:"Diğer önemli bilgi (isteğe bağlı)", lblFree:"Kendi fikri veya isteği (tamamen serbest, isteğe bağlı)",
+btnPrint:"🖨️ Yazdır", btnShare:"📤 Paylaş", btnSaveLinked:"💾 Naast Je'de eşleştirilmiş profil olarak kaydet", saveLinkedHint:"Kaydetmek yalnızca bu formu, kartı yazacağın cihazda kendin doldurursan işe yarar. Başka biri, kendi telefonunda ya da kağıt üzerinde mi dolduruyor? O zaman yazdır ya da paylaş'ı kullan — tercihleri sonra kendin Naast Je'ye gireceksin.",
+savedOk:"Kaydedildi — Naast Je'yi aç ve Tercihlerin altında 'Eşleştirilen kişi'yi seç.", shareOk:"Paylaşım penceresi açıldı.", shareFail:"Paylaşım desteklenmiyor — metin panoya kopyalandı.",
+footerText:"Parçası", interests:["Yemek","Okuma","Yürüyüş","Bisiklet","Bahçe ve bitkiler","Müzik","Gönüllülük","İç mekan bitkileri","Balıkçılık","Yazma"],
+yes:"Evet", no:"—", none:"(doldurulmadı)"},
+};
+
+let lang = "nl";
+
+function applyI18n(){
+document.querySelectorAll("[data-i18n]").forEach(el=>{
+const key = el.getAttribute("data-i18n");
+if(TR[lang][key]) el.textContent = TR[lang][key];
+});
+document.documentElement.lang = lang;
+renderChips();
+}
+
+document.getElementById("langRow").addEventListener("click", (e)=>{
+const btn = e.target.closest(".langbtn");
+if(!btn) return;
+document.querySelectorAll(".langbtn").forEach(b=>b.setAttribute("aria-pressed","false"));
+btn.setAttribute("aria-pressed","true");
+lang = btn.dataset.lang;
+applyI18n();
+});
+
+function renderChips(){
+const wrap = document.getElementById("interestChips");
+const prevChosen = Array.from(wrap.querySelectorAll('.chip[aria-pressed="true"]')).map(c=>parseInt(c.dataset.idx));
+wrap.innerHTML = TR[lang].interests.map((label, idx)=>{
+const on = prevChosen.includes(idx);
+return '<button type="button" class="chip" data-idx="'+idx+'" aria-pressed="'+(on?"true":"false")+'">'+label+'</button>';
+}).join("");
+wrap.querySelectorAll(".chip").forEach(chip=>{
+chip.addEventListener("click", ()=>{
+const on = chip.getAttribute("aria-pressed") === "true";
+chip.setAttribute("aria-pressed", on ? "false" : "true");
+updateMusicVisibility();
+});
+});
+updateMusicVisibility();
+}
+
+function updateMusicVisibility(){
+const musicOn = document.querySelector('#interestChips .chip[data-idx="5"]')?.getAttribute("aria-pressed") === "true";
+document.getElementById("musicGenreWrap").style.display = musicOn ? "block" : "none";
+}
+
+document.getElementById("in_language").addEventListener("change", (e)=>{
+document.getElementById("languageWhichWrap").style.display = e.target.checked ? "block" : "none";
+});
+
+function collectData(){
+const t = TR[lang];
+const chosenIdx = Array.from(document.querySelectorAll("#interestChips .chip[aria-pressed='true']")).map(c=>parseInt(c.dataset.idx));
+return {
+filledBy: document.getElementById("filledBy").value,
+name: document.getElementById("in_name").value.trim(),
+place: document.getElementById("in_place").value.trim(),
+interests: chosenIdx,
+interestLabels: chosenIdx.map(i=>t.interests[i]),
+hobbies: document.getElementById("in_hobbies").value.trim(),
+musicGenre: document.getElementById("in_music").value.trim(),
+age: document.getElementById("in_age").value,
+budget: document.getElementById("in_budget").value,
+social: document.getElementById("in_social").value,
+volunteer: document.getElementById("in_volunteer").checked,
+language: document.getElementById("in_language").checked,
+languageWhich: document.getElementById("in_language_which").value.trim(),
+surprise: document.getElementById("in_surprise").checked,
+demoFree: document.getElementById("in_demo").value.trim(),
+free: document.getElementById("in_free").value.trim(),
+};
+}
+
+function ageLabel(t, age){
+if(age === "young") return t.ageYoung;
+if(age === "adult") return t.ageAdult;
+if(age === "older") return t.ageOlder;
+return t.none;
+}
+function budgetLabel(t, b){
+if(b === "krap") return t.budgetLow;
+if(b === "ruim") return t.budgetHigh;
+return t.budgetMid;
+}
+function socialLabel(t, s){
+if(s === "thuis") return t.socialHome;
+if(s === "buiten") return t.socialOut;
+return t.socialMix;
+}
+function filledByLabel(t, f){
+if(f === "family") return t.filledByFamily;
+if(f === "staff") return t.filledByStaff;
+return t.filledBySelf;
+}
+
+function fillPrintSheet(){
+const t = TR[lang];
+const d = collectData();
+document.getElementById("ps_lbl_filledby").textContent = t.filledByTitle;
+document.getElementById("ps_filledby").textContent = filledByLabel(t, d.filledBy);
+document.getElementById("ps_lbl_name").textContent = t.lblName;
+document.getElementById("ps_name").textContent = d.name || t.none;
+document.getElementById("ps_lbl_place").textContent = t.lblPlace;
+document.getElementById("ps_place").textContent = d.place || t.none;
+document.getElementById("ps_lbl_interests").textContent = t.lblInterests;
+document.getElementById("ps_interests").textContent = d.interestLabels.length ? d.interestLabels.join(", ") : t.none;
+document.getElementById("ps_lbl_hobbies").textContent = t.lblHobbies;
+document.getElementById("ps_hobbies").textContent = d.hobbies || t.none;
+document.getElementById("ps_lbl_music").textContent = t.lblMusic;
+document.getElementById("ps_music").textContent = d.musicGenre || t.none;
+document.getElementById("ps_lbl_age").textContent = t.lblAge;
+document.getElementById("ps_age").textContent = ageLabel(t, d.age);
+document.getElementById("ps_lbl_budget").textContent = t.lblBudget;
+document.getElementById("ps_budget").textContent = budgetLabel(t, d.budget);
+document.getElementById("ps_lbl_social").textContent = t.lblSocial;
+document.getElementById("ps_social").textContent = socialLabel(t, d.social);
+document.getElementById("ps_lbl_volunteer").textContent = t.lblVolunteer;
+document.getElementById("ps_volunteer").textContent = d.volunteer ? t.yes : t.no;
+document.getElementById("ps_lbl_language").textContent = t.lblLanguage;
+document.getElementById("ps_language").textContent = d.language ? (d.languageWhich || t.yes) : t.no;
+document.getElementById("ps_lbl_surprise").textContent = t.lblSurprise;
+document.getElementById("ps_surprise").textContent = d.surprise ? t.yes : t.no;
+document.getElementById("ps_lbl_demo").textContent = t.lblDemoFree;
+document.getElementById("ps_demo").textContent = d.demoFree || t.none;
+document.getElementById("ps_lbl_free").textContent = t.lblFree;
+document.getElementById("ps_free").textContent = d.free || t.none;
+}
+
+document.getElementById("printBtn").addEventListener("click", ()=>{
+fillPrintSheet();
+window.print();
+});
+
+document.getElementById("shareBtn").addEventListener("click", async ()=>{
+const t = TR[lang];
+const d = collectData();
+const lines = [
+t.filledByTitle+": "+filledByLabel(t, d.filledBy),
+t.lblName+": "+(d.name || t.none),
+t.lblPlace+": "+(d.place || t.none),
+t.lblInterests+": "+(d.interestLabels.length ? d.interestLabels.join(", ") : t.none),
+d.hobbies ? t.lblHobbies+": "+d.hobbies : null,
+d.musicGenre ? t.lblMusic+": "+d.musicGenre : null,
+t.lblAge+": "+ageLabel(t, d.age),
+t.lblBudget+": "+budgetLabel(t, d.budget),
+t.lblSocial+": "+socialLabel(t, d.social),
+d.volunteer ? "- "+t.lblVolunteer : null,
+d.language ? "- "+t.lblLanguage+(d.languageWhich?" ("+d.languageWhich+")":"") : null,
+d.surprise ? "- "+t.lblSurprise : null,
+d.demoFree ? t.lblDemoFree+": "+d.demoFree : null,
+d.free ? t.lblFree+": "+d.free : null,
+].filter(Boolean).join("\n");
+
+if(navigator.share){
+try{ await navigator.share({text: lines, title:"Naast Je — Intake"}); return; }catch(e){}
+}
+try{
+await navigator.clipboard.writeText(lines);
+alert(t.shareFail);
+}catch(e){
+alert(lines);
+}
+});
+
+document.getElementById("saveLinkedBtn").addEventListener("click", ()=>{
+const t = TR[lang];
+const d = collectData();
+const profile = {
+name: d.name, place: d.place, interests: d.interests, hobbies: d.hobbies, musicGenre: d.musicGenre,
+budget: d.budget, social: d.social, volunteer: d.volunteer, language: d.language, languageWhich: d.languageWhich,
+surprise: d.surprise, age: d.age, demoFree: d.demoFree, free: d.free
+};
+try{
+localStorage.setItem("naastje_profile_linked", JSON.stringify(profile));
+document.getElementById("saveMsg").textContent = t.savedOk;
+}catch(e){
+document.getElementById("saveMsg").textContent = "";
+}
+});
+
+applyI18n();
+</script>
+</body>
+</html>
