@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2B2024">
+<title>Geboortekaartje · Cartolina</title>
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link id="fontsLink" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Dancing+Script:wght@500;700&family=Marck+Script&family=Fraunces:ital,wght@0,600;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Dancing+Script:wght@500;700&family=Marck+Script&family=Fraunces:ital,wght@0,600;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+<style>
+:root{
+--bg:#2B2024; --panel:#372A2E; --panel-2:#443338; --border:#5A444B;
+--ink-ui:#F5EBE0; --muted:#C9AFA0; --accent-red:#D0405A; --accent-blue:#3E63B8;
+--accent-gold:#D8A34E; --accent-teal:#4F9C8C; --paper:#F0E7D6; --focus:#E8B86A;
+--stage-bg:#241A1E;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:linear-gradient(180deg,var(--bg),#241B1E 60%);color:var(--ink-ui);font-family:'IBM Plex Mono',monospace;
+-webkit-tap-highlight-color:transparent;padding-bottom:56px;}
+header{padding:18px 16px 8px;}
+.backlink{display:inline-block;font-size:.72rem;color:var(--muted);text-decoration:none;border:1px solid var(--border);
+border-radius:20px;padding:5px 12px;margin-bottom:10px;}
+.backlink:hover{color:var(--focus);border-color:var(--focus);}
+h1{font-family:'Fraunces',serif;font-weight:600;font-style:italic;font-size:1.5rem;margin:0;letter-spacing:.2px;
+background:linear-gradient(90deg,var(--focus),var(--accent-red));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.sub{color:var(--muted);font-size:.78rem;margin-top:4px;line-height:1.5;}
+.sub a{color:var(--focus);}
+
+.langrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px auto 4px;padding:0 16px;max-width:720px;}
+.langbtn{background:var(--panel-2);border:2px solid var(--border);color:var(--ink-ui);
+font-family:'IBM Plex Mono',monospace;font-size:1.4rem;line-height:1;width:52px;height:48px;
+border-radius:12px;cursor:pointer;letter-spacing:.4px;display:flex;align-items:center;justify-content:center;
+padding:0;}
+.langbtn.zh{font-size:.85rem;letter-spacing:.5px;}
+.langbtn[aria-pressed="true"]{border-color:var(--focus);box-shadow:0 0 0 2px rgba(232,184,106,0.25);}
+.langbtn:focus-visible, button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+
+main{max-width:720px;margin:0 auto;padding:0 16px;}
+
+details.info{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--accent-teal);
+border-radius:12px;padding:4px 14px;margin:12px 0;}
+details.info summary{cursor:pointer;padding:10px 0;font-family:'Fraunces',serif;font-style:italic;font-weight:600;
+font-size:.95rem;color:var(--ink-ui);list-style:none;display:flex;align-items:center;gap:8px;}
+details.info summary::-webkit-details-marker{display:none;}
+details.info summary::before{content:"✦";color:var(--accent-teal);font-size:.85rem;}
+details.info p{font-size:.82rem;line-height:1.55;color:var(--muted);margin:0 0 12px;}
+
+.stage{background:var(--stage-bg);border-radius:14px;padding:14px;margin:10px 0 6px;
+border:1px solid var(--border);box-shadow:inset 0 0 0 1px rgba(232,184,106,0.08);}
+.sidetabs{display:flex;gap:8px;margin-bottom:12px;}
+.sidetab{flex:1;background:var(--panel-2);border:1px solid var(--border);color:var(--muted);
+padding:9px 10px;border-radius:8px;font-size:.78rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;
+letter-spacing:.3px;}
+.sidetab[aria-pressed="true"]{border-color:var(--focus);color:var(--focus);background:rgba(232,184,106,0.12);}
+#postcard{width:100%;height:auto;display:block;border-radius:4px;box-shadow:0 10px 30px rgba(0,0,0,.5);}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0;
+border-left:3px solid var(--accent-blue);}
+.panel.layouts{border-left-color:var(--accent-gold);}
+.panel.photos{border-left-color:var(--accent-teal);}
+.panel.speak{border-left-color:#9c7fd0;}
+.panel.send{border-left-color:var(--accent-red);}
+.panel h2{font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:1rem;margin:0 0 10px;color:var(--ink-ui);}
+label{display:block;font-size:.72rem;color:var(--muted);margin:10px 0 4px;letter-spacing:.3px;text-transform:uppercase;}
+label:first-of-type{margin-top:0;}
+textarea, input[type=text], input[type=date], input[type=number], select{
+width:100%;background:var(--panel-2);border:1px solid var(--border);color:var(--ink-ui);
+border-radius:8px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:.9rem;resize:vertical;}
+textarea{min-height:120px;line-height:1.5;}
+.row{display:flex;gap:10px;}
+.row > div{flex:1;}
+.chips{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{background:var(--panel-2);border:1px solid var(--border);color:var(--ink-ui);
+padding:8px 12px;border-radius:20px;font-size:.78rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;}
+.chip[aria-pressed="true"]{border-color:var(--focus);color:var(--focus);background:rgba(232,184,106,0.12);}
+
+.catrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.catchip{background:var(--panel-2);border:1px solid var(--border);color:var(--muted);
+padding:7px 14px;border-radius:20px;font-size:.76rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;}
+.catchip[aria-pressed="true"]{border-color:var(--focus);color:var(--focus);background:rgba(232,184,106,0.14);}
+
+.layoutgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.layoutcard{border:2px solid var(--border);border-radius:12px;padding:0;cursor:pointer;overflow:hidden;
+background:var(--panel-2);text-align:left;}
+.layoutcard[aria-pressed="true"]{border-color:var(--focus);box-shadow:0 0 0 2px rgba(232,184,106,0.25);}
+.layoutcard .swatch{height:58px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+.layoutcard .meta{padding:7px 9px;}
+.layoutcard .meta .nm{font-size:.76rem;font-weight:600;color:var(--ink-ui);}
+.layoutcard .meta .cat{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;}
+
+.photobtn{display:inline-flex;align-items:center;gap:8px;background:var(--panel-2);border:1px dashed var(--accent-teal);
+color:var(--ink-ui);padding:10px 14px;border-radius:8px;font-size:.8rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;}
+.thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.thumb{position:relative;width:64px;height:64px;border-radius:6px;overflow:hidden;border:1px solid var(--border);}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.thumb button{position:absolute;top:2px;right:2px;background:rgba(20,18,16,.8);color:#fff;border:none;
+width:18px;height:18px;border-radius:50%;font-size:.7rem;line-height:1;cursor:pointer;}
+
+.check{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:.8rem;color:var(--muted);}
+.check input{width:auto;}
+
+#speakBtn{width:100%;background:var(--panel-2);color:var(--ink-ui);border:1px solid #9c7fd0;border-radius:10px;
+padding:12px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:.85rem;letter-spacing:.4px;cursor:pointer;}
+#speakBtn:active{transform:translateY(1px);}
+#speakStatus{font-size:.72rem;color:var(--muted);margin-top:8px;text-align:center;min-height:1em;}
+
+#exportBtn{width:100%;background:linear-gradient(90deg,var(--accent-red),#B8324A);color:#fff;border:none;border-radius:10px;
+padding:14px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:.9rem;letter-spacing:.4px;
+margin-top:14px;cursor:pointer;box-shadow:0 6px 18px rgba(208,64,90,0.35);}
+#exportBtn:active{transform:translateY(1px);}
+#shareBtn{width:100%;background:var(--panel-2);color:var(--ink-ui);border:1px solid var(--accent-teal);border-radius:10px;
+padding:12px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:.85rem;letter-spacing:.4px;cursor:pointer;margin-top:10px;}
+#shareBtn:active{transform:translateY(1px);}
+#printBtn{width:100%;background:var(--panel-2);color:var(--ink-ui);border:1px solid var(--accent-gold);border-radius:10px;
+padding:10px;font-size:1.3rem;letter-spacing:.4px;cursor:pointer;line-height:1.2;margin-top:10px;}
+#printBtn:active{transform:translateY(1px);}
+#exportMsg{font-size:.75rem;text-align:center;margin-top:8px;min-height:1em;color:var(--muted);}
+
+footer{max-width:720px;margin:24px auto 0;padding:0 16px;text-align:center;color:var(--muted);font-size:.7rem;}
+#copyFooter{position:fixed;bottom:0;left:0;right:0;background:rgba(36,26,30,.96);color:var(--muted);
+font-size:.62rem;text-align:center;padding:7px 10px;z-index:9999;font-family:'IBM Plex Mono',monospace;
+letter-spacing:.2px;user-select:none;border-top:1px solid rgba(232,184,106,.3);line-height:1.6;}
+#copyFooter .hl{color:var(--focus);}
+#copyFooter .lic{color:var(--muted);cursor:pointer;text-decoration:underline;}
+#licenseModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10000;
+align-items:center;justify-content:center;padding:20px;}
+#licenseModal .box{background:var(--panel);color:var(--ink-ui);border:1px solid var(--focus);
+border-radius:12px;max-width:440px;width:100%;padding:20px;font-family:'IBM Plex Mono',monospace;
+font-size:.78rem;line-height:1.6;max-height:82vh;overflow-y:auto;}
+#licenseModal h3{color:var(--focus);margin:0 0 10px;font-size:.95rem;font-family:'Fraunces',serif;font-style:italic;}
+#licenseModal .modal-sub{font-weight:normal;font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-style:normal;}
+#licenseModal p{margin:10px 0;}
+#licenseModal a{color:var(--accent-teal);}
+#licenseModal hr{border:none;border-top:1px solid var(--border);margin:14px 0;}
+#licenseModal button{margin-top:10px;padding:9px 18px;background:var(--accent-red);color:#fff;border:none;
+border-radius:8px;cursor:pointer;font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:.78rem;}
+
+#blockOverlay{position:fixed;inset:0;background:#1a1315;color:#F5EBE0;display:none;
+align-items:center;justify-content:center;text-align:center;padding:30px;font-family:'IBM Plex Mono',monospace;z-index:9999;}
+</style>
+</head>
+<body>
+
+<header>
+<a class="backlink" href="index.html" data-i18n="backLink">← Terug naar Cartolina</a>
+<h1 data-i18n="title">Geboortekaartje</h1>
+<div class="sub" data-i18n="subtitle">Kondig een geboorte aan — kies een stijl, voeg tot 3 foto's toe, een gedichtje of eigen tekst, en laat het kaartje zelfs voorlezen.</div>
+</header>
+
+<div class="langrow" id="langRow">
+<button type="button" class="langbtn" data-lang="nl" aria-pressed="true" aria-label="Nederlands" title="Nederlands">🇳🇱</button>
+<button type="button" class="langbtn" data-lang="en" aria-pressed="false" aria-label="English" title="English">🇬🇧</button>
+<button type="button" class="langbtn" data-lang="it" aria-pressed="false" aria-label="Italiano" title="Italiano">🇮🇹</button>
+<button type="button" class="langbtn" data-lang="fr" aria-pressed="false" aria-label="Français" title="Français">🇫🇷</button>
+<button type="button" class="langbtn" data-lang="de" aria-pressed="false" aria-label="Deutsch" title="Deutsch">🇩🇪</button>
+<button type="button" class="langbtn" data-lang="es" aria-pressed="false" aria-label="Español" title="Español">🇪🇸</button>
+<button type="button" class="langbtn" data-lang="uk" aria-pressed="false" aria-label="Українська" title="Українська">🇺🇦</button>
+<button type="button" class="langbtn zh" data-lang="zh" aria-pressed="false" aria-label="中文" title="中文">中文</button>
+</div>
+
+<main>
+<details class="info">
+<summary data-i18n="infoTitle">Over deze geboortekaartjes</summary>
+<p data-i18n="infoBody">Tien stijlen om uit te kiezen — vier voor een jongetje, vier voor een meisje en twee genderneutrale stijlen. Kies een voorgedrukt gedichtje of schrijf je eigen tekst, vul de gegevens in (naam is genoeg — datum, gewicht en lengte zijn leuk maar niet verplicht) en voeg tot drie foto's toe. Je kunt het kaartje ook laten voorlezen. En, geheel Nederlands: er wordt hier en daar gedacht aan een beschuitje met muisjes.</p>
+</details>
+
+<div class="stage">
+<div class="sidetabs" id="sideTabs">
+<button type="button" class="sidetab" data-side="front" aria-pressed="true" data-i18n="frontTab">Voorzijde</button>
+<button type="button" class="sidetab" data-side="back" aria-pressed="false" data-i18n="backTab">Achterzijde</button>
+</div>
+<canvas id="postcard" width="1200" height="800" aria-label="Voorbeeld van het geboortekaartje"></canvas>
+</div>
+
+<div class="panel layouts">
+<h2 data-i18n="stijlHeading">Stijl</h2>
+<div class="catrow" id="catRow">
+<button type="button" class="catchip" data-cat="alle" aria-pressed="true" data-i18n="catAll">Alle</button>
+<button type="button" class="catchip" data-cat="jongen" aria-pressed="false" data-i18n="catBoy">Jongen</button>
+<button type="button" class="catchip" data-cat="meisje" aria-pressed="false" data-i18n="catGirl">Meisje</button>
+<button type="button" class="catchip" data-cat="neutraal" aria-pressed="false" data-i18n="catNeutral">Neutraal</button>
+</div>
+<div class="layoutgrid" id="layoutGrid"></div>
+</div>
+
+<div class="panel">
+<h2 data-i18n="gegevensHeading">Gegevens</h2>
+<label data-i18n="genderQuestion">Is het een jongen of een meisje?</label>
+<div class="chips" id="genderChips">
+<button type="button" class="chip" data-gender="jongen" aria-pressed="true" data-i18n="genderBoy">Jongen</button>
+<button type="button" class="chip" data-gender="meisje" aria-pressed="false" data-i18n="genderGirl">Meisje</button>
+</div>
+
+<label for="childName" data-i18n="lblName">Naam</label>
+<input type="text" id="childName" maxlength="40" data-i18n-ph="namePh" placeholder="Naam van de baby">
+
+<div class="row">
+<div>
+<label for="childDate" data-i18n="lblDate">Geboortedatum (optioneel)</label>
+<input type="date" id="childDate">
+</div>
+</div>
+<div class="row">
+<div>
+<label for="childWeight" data-i18n="lblWeight">Gewicht in gram (optioneel)</label>
+<input type="number" id="childWeight" data-i18n-ph="weightPh" placeholder="bijv. 3400" min="0">
+</div>
+<div>
+<label for="childLength" data-i18n="lblLength">Lengte in cm (optioneel)</label>
+<input type="number" id="childLength" data-i18n-ph="lengthPh" placeholder="bijv. 51" min="0">
+</div>
+</div>
+
+<div class="check">
+<input type="checkbox" id="muisjes">
+<label for="muisjes" style="margin:0;text-transform:none;font-size:.78rem;" data-i18n="muisjesLabel">🐭 Beschuit met muisjes-motief toevoegen (achterzijde)</label>
+</div>
+</div>
+
+<div class="panel">
+<h2 data-i18n="tekstHeading">Tekst</h2>
+<label data-i18n="tekstHint">Kies een voorgedrukte tekst, of schrijf je eigen tekst</label>
+<div class="chips" id="poemChips">
+<button type="button" class="chip" data-poem="klassiek" aria-pressed="true" data-i18n="poemKlassiek">Klassiek</button>
+<button type="button" class="chip" data-poem="speels" aria-pressed="false" data-i18n="poemSpeels">Speels</button>
+<button type="button" class="chip" data-poem="sprookje" aria-pressed="false" data-i18n="poemSprookje">Sprookjesachtig</button>
+<button type="button" class="chip" data-poem="kort" aria-pressed="false" data-i18n="poemKort">Kort &amp; krachtig</button>
+<button type="button" class="chip" data-poem="eigen" aria-pressed="false" data-i18n="poemEigen">Eigen tekst</button>
+</div>
+<label for="msg" style="margin-top:14px;" data-i18n="lblCardText">Tekst op het kaartje</label>
+<textarea id="msg" maxlength="500"></textarea>
+<label for="practicalInfo" style="margin-top:14px;" data-i18n="lblPracticalInfo">Praktische informatie (optioneel)</label>
+<textarea id="practicalInfo" maxlength="220" style="min-height:70px;" data-i18n-ph="practicalInfoPh" placeholder="bijv. mama en baby rusten thuis, bezoek na overleg — of: kraamafdeling, kamer 4, ingang B"></textarea>
+</div>
+
+<div class="panel photos">
+<h2 data-i18n="fotoHeading">Foto's</h2>
+<label class="photobtn" for="photoInput">
+<span data-i18n="addPhoto">+ Foto toevoegen</span>
+</label>
+<input type="file" id="photoInput" accept="image/*" style="display:none">
+<div class="thumbs" id="thumbs"></div>
+<div class="sub" style="margin-top:8px;font-size:.7rem;" data-i18n="photoHint">Eén foto — verschijnt gedimd op de achtergrond van de voorzijde, met het motief en de naam erover.</div>
+<label for="photoOpacity" data-i18n="lblBrightness">Helderheid van de foto</label>
+<input type="range" id="photoOpacity" min="10" max="100" value="38">
+</div>
+
+<div class="panel speak">
+<h2 data-i18n="speakHeading">Laten voorlezen</h2>
+<div class="sub" style="margin:-4px 0 12px;font-size:.72rem;" data-i18n="speakHint">Alleen bij dit kaartje: laat de aankondiging en de tekst hardop voorlezen door je toestel.</div>
+<button id="speakBtn" type="button" data-i18n="speakBtn">🔊 Kaartje voorlezen</button>
+<div id="speakStatus"></div>
+</div>
+
+<div class="panel send">
+<h2 data-i18n="sendHeading">Versturen</h2>
+<div class="check">
+<input type="checkbox" id="watermark" checked>
+<label for="watermark" style="margin:0;text-transform:none;font-size:.78rem;" data-i18n="lblWatermark">Kleine copyright-vermelding op de kaart tonen</label>
+</div>
+<button id="exportBtn" type="button" data-i18n="exportBtn">Opslaan als afbeelding</button>
+<button id="shareBtn" type="button" style="display:none;" data-i18n="shareBtn">Direct delen</button>
+<button id="printBtn" type="button" title="Printen / Versturen" aria-label="Printen / Versturen">🖨️📬</button>
+<div id="exportMsg"></div>
+</div>
+</main>
+
+<div id="copyFooter">
+&copy; <span id="year"></span> <span class="hl">Jan den Hollander</span> &nbsp;|&nbsp;
+<span class="hl">Geboortekaartje &middot; Cartolina</span> &nbsp;|&nbsp;
+<span data-i18n="footerFree">Gratis · niet-commercieel · ongewijzigd</span> &nbsp;|&nbsp;
+<span class="lic" id="licenseOpenBtn">&#8505;&#65039; <span data-i18n="footerLicense">Licentie</span></span>
+</div>
+
+<div id="licenseModal">
+<div class="box">
+<h3>&copy; Jan den Hollander &nbsp;&middot;&nbsp; <span class="modal-sub">Geboortekaartje &middot; Cartolina</span></h3>
+<p data-i18n="licenseBody">Dit hulpmiddel is gratis en mag vrij worden gedeeld, uitsluitend ongewijzigd en voor niet-commerciële doeleinden, met bronvermelding van de oorspronkelijke auteur. Commercieel gebruik, wijziging, verkoop of integratie in betaalde producten is uitdrukkelijk verboden zonder schriftelijke toestemming. Hulp is en blijft gratis.</p>
+<hr>
+<p>&#128231; <a href="mailto:jandenhollander@duck.com">jandenhollander@duck.com</a></p>
+<p>&#128279; <a href="https://github.com/Jan-den-Hollander" target="_blank" rel="noopener">github.com/Jan-den-Hollander</a></p>
+<button type="button" id="licenseCloseBtn" data-i18n="licenseClose">Sluiten</button>
+</div>
+</div>
+
+<div id="blockOverlay">
+<div>
+<p style="font-family:'Fraunces',serif;font-style:italic;font-size:1.1rem;">Deze app is aangepast en kan niet worden vertrouwd.</p>
+<p style="font-size:.8rem;color:#C9AFA0;">Herlaad de originele pagina om verder te gaan.</p>
+</div>
+</div>
+
+<script src="geboortekaartje.js" defer></script>
+</body>
+</html>
