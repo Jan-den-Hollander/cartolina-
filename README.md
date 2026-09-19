@@ -1,6 +1,6 @@
 # Briefkaart · Cartolina
 
-Schrijf een digitale briefkaart — cursief, met foto, klaar voor Slowly. Het resultaat is één afbeelding die je opslaat of direct deelt.
+Schrijf een digitale briefkaart — cursief, met foto, klaar om als afbeeldingte verzenden middel je sociale app van voorkeur. Het resultaat is één afbeelding die je opslaat of direct deelt.
 
 **▶ Direct gebruiken / Use it now:** https://cartolina-mauve.vercel.app
 
