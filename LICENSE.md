@@ -1,6 +1,6 @@
-# [APPNAAM] — Licentie · License · Licenza
+# Briefkaart · Cartolina — Licentie · License · Licenza
 
-© [JAAR] Jan den Hollander — jandenhollander@duck.com
+© 2026 Jan den Hollander — jandenhollander@duck.com
 https://github.com/Jan-den-Hollander
 
 ## Nederlands
