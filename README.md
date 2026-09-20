@@ -8,6 +8,8 @@ ENG-Create a digital postcard — in italics, with a photo, ready to send as an 
 ## Gebruiken
 
 Open de link hierboven in je browser. Op je telefoon kun je de app installeren via het browsermenu (⋮ of Delen) → **Toevoegen aan startscherm**. Daarna werkt hij als een gewone app.
+it-Apri il link qui sopra nel tuo browser. Sul tuo telefono puoi installare l'app tramite il menu del browser (⋮ o Condividi) → **Aggiungi alla schermata iniziale**. Dopodiché funzionerà come una normale app.
+eng-Open the link above in your browser. On your phone, you can install the app via the browser menu (⋮ or Share) → **Add to Home**. After that, it works like a regular app.
 
 ## Privacy
 
@@ -15,9 +17,26 @@ Geen account, geen advertenties. Er worden anonieme bezoekcijfers bijgehouden (z
 
 Je tekst, foto's en adresgegevens worden op je eigen toestel verwerkt en niet verstuurd. Kies je een plaats of je huidige locatie als achtergrond, dan worden de plaatsnaam en de kaartstukjes van dat gebied opgevraagd bij OpenStreetMap. De lettertypen komen van Google Fonts.
 
+it-annunci pubblicitari. Vengono registrati dati anonimi sulle visite (senza cookie). I piccoli pollici in basso inviano al creatore solo la tua valutazione (buono, discreto o scarso) e il nome dell’app.
+
+Il testo, le foto e i dati di indirizzo vengono elaborati sul tuo dispositivo e non vengono inviati. Se scegli un luogo o la tua posizione attuale come sfondo, il nome del luogo e i frammenti di mappa di quella zona vengono recuperati da OpenStreetMap. I caratteri provengono da Google Fonts.
+
+eng-No account, no ads. Anonymous visitor statistics are tracked (without cookies). The small thumbs-up icons at the bottom only send your choice (good, mediocre, or bad) and the name of the app to the developer.
+
+Your text, photos, and address details are processed on your own device and are not sent. If you choose a place or your current location as the background, the place name and map segments of that area are retrieved from OpenStreetMap. The fonts come from Google Fonts.
+
 ## Waardering en contact
 
 Iets aan de hand of een idee? Tik onderaan de app op een duim, of mail jandenhollander@duck.com.
+
+## Valutazione e contatti
+
+Hai qualche problema o un'idea? Tocca il pollice in fondo all'app oppure invia un'e-mail a jandenhollander@duck.com.
+
+## Ratings and Contact
+
+Have a problem or an idea? Tap the thumb at the bottom of the app or send an email to jandenhollander@duck.com.
+
 
 ## Licentie · License · Licenza
 
