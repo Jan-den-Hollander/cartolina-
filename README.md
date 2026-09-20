@@ -5,10 +5,12 @@ IT-Crea una cartolina digitale — in corsivo, con foto, pronta per essere invia
 ENG-Create a digital postcard — in italics, with a photo, ready to send as an image via your favourite social media app. The result is a single image that you can save or share straight away.
 **▶ Direct gebruiken / Use it now:** https://cartolina-mauve.vercel.app
 
-## Gebruiken
+## Gebruiken-Usarlo 
 
 Open de link hierboven in je browser. Op je telefoon kun je de app installeren via het browsermenu (⋮ of Delen) → **Toevoegen aan startscherm**. Daarna werkt hij als een gewone app.
+
 it-Apri il link qui sopra nel tuo browser. Sul tuo telefono puoi installare l'app tramite il menu del browser (⋮ o Condividi) → **Aggiungi alla schermata iniziale**. Dopodiché funzionerà come una normale app.
+
 eng-Open the link above in your browser. On your phone, you can install the app via the browser menu (⋮ or Share) → **Add to Home**. After that, it works like a regular app.
 
 ## Privacy
