@@ -1,6 +1,6 @@
 # Briefkaart · Cartolina
 
-Schrijf een digitale briefkaart — cursief, met foto, klaar om als afbeeldingte verzenden middel je sociale app van voorkeur. Het resultaat is één afbeelding die je opslaat of direct deelt.
+NL-Schrijf een digitale briefkaart — cursief, met foto, klaar om als afbeeldingte verzenden middel je sociale app van voorkeur. Het resultaat is één afbeelding die je opslaat of direct deelt.
 IT-Crea una cartolina digitale — in corsivo, con foto, pronta per essere inviata come immagine tramite la tua app social preferita. Il risultato è un'unica immagine che puoi salvare o condividere immediatamente.
 ENG-Create a digital postcard — in italics, with a photo, ready to send as an image via your favourite social media app. The result is a single image that you can save or share straight away.
 **▶ Direct gebruiken / Use it now:** https://cartolina-mauve.vercel.app
