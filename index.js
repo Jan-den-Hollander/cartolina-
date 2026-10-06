@@ -1038,7 +1038,7 @@ if(overPhoto){
 ctx.shadowColor = "rgba(255,255,255,0.9)";
 ctx.shadowBlur = 4;
 }
-ctx.fillText("© Jan den Hollander", CW-30, CH-18);
+ctx.fillText("© Jan den Hollander · cartolina-mauve.vercel.app", CW-30, CH-18);
 ctx.textAlign = "left";
 ctx.restore();
 }
