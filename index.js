@@ -62,7 +62,7 @@ exportBtn:"Save as images", msgPlaceholder:"Dear penpal,\n\nHere's my letter fro
 backPlaceholder:"...and this just fits on the back.",
 placePlaceholder:"e.g. Amsterdam",
 fontOnline:"Cursive font loaded.", fontOffline:"No internet — using a system font instead.",
-noAddrNote:"Prefer not to use address details on the postcard? <a href=\"index-zonder.html\" target=\"_blank\" rel=\"noopener\">Click here</a> for the version without the address block, which gives extra room for photos on the front. (Filling in address details isn't required, by the way — you can put something else there too; the address block just adds a bit more authenticity, for example when printing.) Note: that page has no back button — use your browser's back navigation or restart the app to return here.",
+noAddrNote:"Would you prefer not to include an address on the postcard, or would you like to send it as an aerogramme (see also printing options)? <a href=\"index-zonder.html\" target=\"_blank\" rel=\"noopener\">Click here</a> for the version without the address block, which gives extra room for photos on the front. (Filling in address details isn't required, by the way — you can put something else there too; the address block just adds a bit more authenticity, for example when printing.) Note: that page has no back button — use your browser's back navigation or restart the app to return here.",
 h2bgphoto:"Picture-postcard background", bgPhotoHint:"Use your own photo as the background of the back side — write your message over it, just like on a real picture postcard.", addBgPhoto:"+ Choose background photo",
 lblLocationBg:"Or use a location as background", locationPh:"Place name, e.g. Amsterdam",
 useLocationBtn:"Use map of this place", useGpsBtn:"📍 Use my current location",
