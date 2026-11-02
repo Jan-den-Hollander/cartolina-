@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cartolina-v2'; // ophogen bij een volgende opschoning forceert een verse cache
+const CACHE_NAME = 'cartolina-v3'; // ophogen bij een volgende opschoning forceert een verse cache
 const CORE_ASSETS = [
   './manifest.json',
   './icon-192.png',
